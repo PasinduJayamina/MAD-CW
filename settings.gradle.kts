@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NovelOnline"
+rootProject.name = "mobileCW"
 include(":app")
  
