@@ -71,7 +71,8 @@
                 android:text="Login"
                 android:textSize="16sp"
                 android:textColor="#FFFFFF"
-                android:background="#0B0B0B" />
+                android:background="#000000"
+                />
 
 
             <LinearLayout
