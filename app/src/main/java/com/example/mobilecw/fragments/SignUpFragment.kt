@@ -24,7 +24,7 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize Firebase
+
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -39,7 +39,7 @@ class SignUpFragment : Fragment() {
         val backText = view.findViewById<TextView>(R.id.textViewBack)
 
 
-        val roles = arrayOf("reader", "writer")
+        val roles = arrayOf("Select Role", "reader", "writer")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, roles)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerRole.adapter = adapter
@@ -61,6 +61,7 @@ class SignUpFragment : Fragment() {
                 password.isEmpty() -> showError(passwordEditText, "Password required")
                 password.length < 6 -> showError(passwordEditText, "Password must be at least 6 characters")
                 password != confirmPassword -> showError(confirmPasswordEditText, "Passwords don't match")
+                role == "Select Role" -> Toast.makeText(requireContext(), "Please select a role", Toast.LENGTH_SHORT).show()
                 else -> registerUser(email, password, firstName, lastName, role)
             }
         }
