@@ -1,5 +1,4 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -7,117 +6,75 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center">
+        android:padding="24dp">
 
-        <!-- Centered Content Container -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
-            <!-- App Logo and Title -->
-            <LinearLayout
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginBottom="32dp">
-
-                <!-- App Title -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Novel Online"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    android:textColor="#0D0D0F"
-                    android:layout_marginTop="12dp"
-                    android:layout_gravity="center"
-                    android:fontFamily="sans-serif-medium"/>
-            </LinearLayout>
-
-                <!-- Logo Image -->
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:src="@drawable/logo_novel"
-                    android:contentDescription="App Logo"
-                    android:layout_gravity="center"/>
-
-
-
-            <!-- Welcome Title -->
-            <!--<TextView
-                android:id="@+id/textViewWelcome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome Back"
-                android:textSize="24sp"
+                android:text="Novel Online"
+                android:textSize="26sp"
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="#0D0D0F"
+                android:layout_marginTop="12dp"
                 android:layout_marginBottom="32dp"
-                android:gravity="center"/>-->
+                android:gravity="center"
+                android:fontFamily="sans-serif-medium" />
 
-            <!-- Email Field -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailInputLayout"
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/logo_novel"
+                android:contentDescription="App Logo"
+                android:layout_gravity="center"
+                android:layout_marginBottom="32dp" />
+
+
+            <EditText
+                android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:boxStrokeColor="#424242"
-                app:hintTextColor="#424242">
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textColor="#000000"
+                android:textColorHint="#888888"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Email"
-                    android:inputType="textEmailAddress"
-                    android:textColor="#000000"
-                    android:textColorHint="#888888"
-                    android:textSize="16sp"
-                    android:importantForAutofill="auto"/>
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Password Field -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/passwordInputLayout"
+            <EditText
+                android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:boxStrokeColor="#424242"
-                app:hintTextColor="#424242"
-                app:passwordToggleEnabled="true">
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textColor="#000000"
+                android:textColorHint="#888888"
+                android:textSize="16sp"
+                android:layout_marginBottom="24dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:textColor="#000000"
-                    android:textColorHint="#888888"
-                    android:textSize="16sp"
-                    android:importantForAutofill="auto"/>
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Login Button -->
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/buttonLogin"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:text="Login"
                 android:textSize="16sp"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#0D0D0F"
-                android:textAllCaps="false"
-                android:stateListAnimator="@null"/>
+                android:background="#000000"
+                />
 
-            <!-- Sign Up Link -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,8 +99,7 @@
                     android:textStyle="bold"
                     android:layout_marginStart="4dp"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"/>
+                    android:focusable="true" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
