@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:contentPadding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:background="#E0E0E0"
+            android:gravity="center"
+            android:layout_marginEnd="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cover"
+                android:textSize="12sp"
+                android:textColor="#A0A0A0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/book_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The Dragon's Ascent"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/chapter_count_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chapters: 15"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:id="@+id/last_updated_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Updated: July 29, 2025"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:id="@+id/created_on_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Created On: June 1, 2025"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/delete_book_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="Delete Book" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
