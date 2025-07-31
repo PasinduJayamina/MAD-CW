@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services") //
+    id("androidx.navigation.safeargs.kotlin")
     kotlin("plugin.serialization") version "2.0.21"
 }
 
@@ -50,6 +51,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0") // For Material Design cards
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.fragment)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
@@ -60,6 +62,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    val navVersion = "2.7.3"
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.firebase:firebase-firestore:24.11.0")

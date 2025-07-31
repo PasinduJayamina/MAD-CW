@@ -1,4 +1,4 @@
-package com.example.mobilecw.fragments
+package com.example.novelonline.fragments
 
 import android.os.Bundle
 import android.util.Patterns
@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import com.example.mobilecw.R
 import com.example.mobilecw.repository.UserRepository
+import com.example.novelonline.R
 
 class LoginFragment : Fragment() {
 

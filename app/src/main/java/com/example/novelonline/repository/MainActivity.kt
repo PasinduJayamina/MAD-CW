@@ -1,8 +1,8 @@
-package com.example.mobilecw
+package com.example.novelonline.repository
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mobilecw.fragments.LoginFragment
+import com.example.novelonline.fragments.LoginFragment
 import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {

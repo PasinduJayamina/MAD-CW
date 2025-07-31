@@ -1,11 +1,11 @@
-package com.example.mobilecw.fragments
+package com.example.novelonline.fragments
 
 import android.os.Bundle
 import android.util.Patterns
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
-import com.example.mobilecw.R
+import com.example.novelonline.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 

@@ -4,7 +4,13 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
 }
 buildscript {
+    repositories {
+        google()
+    }
+
     dependencies {
         classpath("com.google.gms:google-services:4.4.0")
+        val navVersion = "2.7.3"
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
     }
 }
