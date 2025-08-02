@@ -1,15 +1,15 @@
 package com.example.novelonline.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button // Import Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.novelonline.R
 import com.example.novelonline.databinding.FragmentAddTitleBinding
 
@@ -20,8 +20,8 @@ class AddTitleFragment : Fragment() {
 
     // Declare views
     private lateinit var backArrow: TextView
-    private lateinit var addTitleButton: Button // Changed to Button
     private lateinit var mainTitleEditText: EditText
+    private lateinit var addTitleButton: Button // Declare the button here
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,21 +34,37 @@ class AddTitleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize views using the binding object
-        backArrow = binding.root.findViewById(R.id.back_arrow)
-        addTitleButton = binding.root.findViewById(R.id.add_title_button) // Initialize as Button
-        mainTitleEditText = binding.root.findViewById(R.id.main_title_edit_text)
+        // Initialize views using the binding object directly (no need for findViewById)
+        backArrow = binding.backArrow
+        mainTitleEditText = binding.mainTitleEditText
+        addTitleButton = binding.addTitleButton // Initialize the button here
 
         // Set click listener for the back arrow
         backArrow.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
 
         // Set click listener for the "Add Title" button
         addTitleButton.setOnClickListener {
-            mainTitleEditText.requestFocus()
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(mainTitleEditText, InputMethodManager.SHOW_IMPLICIT)
+            val bookTitle = mainTitleEditText.text.toString().trim()
+
+            // 1. Basic validation: Check if the title is not empty
+            if (bookTitle.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter a book title", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // TODO 2. Perform navigation
+            // To pass data (like the book title) to the next fragment, you should
+            // use a Safe Args action in your nav_graph.xml.
+
+            // Hypothetical Safe Args action call
+            // val action = AddTitleFragmentDirections.actionAddTitleFragmentToCompleteBookInfoFragment(bookTitle)
+            // findNavController().navigate(action)
+
+            // For now, let's use a simple navigation call.
+            // Ensure you have an action defined in your nav_graph.xml
+            findNavController().navigate(R.id.action_addTitleFragment_to_completeBookInfoFragment)
         }
     }
 

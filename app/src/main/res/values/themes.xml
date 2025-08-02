@@ -5,5 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.NovelOnline" parent="Base.Theme.NovelOnline" />
+    <style name="Theme.NovelOnline" parent="Base.Theme.NovelOnline" >
+        <item name="actionBarSize">50dp</item>
+    </style>
 </resources>

@@ -8,38 +8,33 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.novelonline.R
 
 class CompleteBookInfoFragment : Fragment() {
+
+    // --- Declare Views ---
+
+    // Back Arrow
+    private lateinit var backArrow: TextView
 
     // Language views
     private lateinit var languageRow: LinearLayout
     private lateinit var languageOptionsContainer: LinearLayout
     private lateinit var languageText: TextView
     private lateinit var languageArrow: TextView
-    private lateinit var optionAmericanEnglish: TextView
-    private lateinit var optionUkEnglish: TextView
 
     // Book Type views
     private lateinit var bookTypeRow: LinearLayout
     private lateinit var bookTypeOptionsContainer: LinearLayout
     private lateinit var bookTypeText: TextView
     private lateinit var bookTypeArrow: TextView
-    private lateinit var optionFanFiction: TextView
-    private lateinit var varoptionNovels: TextView
-    private lateinit var optionShortStory: TextView
 
     // Genre views
     private lateinit var genreRow: LinearLayout
     private lateinit var genreOptionsContainer: LinearLayout
     private lateinit var genreText: TextView
     private lateinit var genreArrow: TextView
-    private lateinit var optionRomance: TextView
-    private lateinit var optionMystery: TextView
-    private lateinit var optionFantasy: TextView
-    private lateinit var optionScienceFiction: TextView
-    private lateinit var optionThriller: TextView
-    private lateinit var optionHistoricalFiction: TextView
 
     // Start Writing Button
     private lateinit var startWritingButton: Button
@@ -48,50 +43,58 @@ class CompleteBookInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_complete_book_info, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // --- Initialize all views from the inflated layout ---
+        // --- Initialize views ---
+
+        // Back Arrow
+        backArrow = view.findViewById(R.id.back_arrow)
+
         // Language section
         languageRow = view.findViewById(R.id.language_row)
         languageOptionsContainer = view.findViewById(R.id.language_options_container)
         languageText = view.findViewById(R.id.language_text)
         languageArrow = view.findViewById(R.id.language_arrow)
-        optionAmericanEnglish = view.findViewById(R.id.option_american_english)
-        optionUkEnglish = view.findViewById(R.id.option_uk_english)
+        val optionAmericanEnglish = view.findViewById<TextView>(R.id.option_american_english)
+        val optionUkEnglish = view.findViewById<TextView>(R.id.option_uk_english)
 
         // Book Type section
         bookTypeRow = view.findViewById(R.id.book_type_row)
         bookTypeOptionsContainer = view.findViewById(R.id.book_type_options_container)
         bookTypeText = view.findViewById(R.id.book_type_text)
         bookTypeArrow = view.findViewById(R.id.book_type_arrow)
-        optionFanFiction = view.findViewById(R.id.option_fan_fiction)
-        varoptionNovels = view.findViewById(R.id.option_novels)
-        optionShortStory = view.findViewById(R.id.option_short_story)
+        val optionFanFiction = view.findViewById<TextView>(R.id.option_fan_fiction)
+        val optionNovels = view.findViewById<TextView>(R.id.option_novels)
+        val optionShortStory = view.findViewById<TextView>(R.id.option_short_story)
 
         // Genre section
         genreRow = view.findViewById(R.id.genre_row)
         genreOptionsContainer = view.findViewById(R.id.genre_options_container)
         genreText = view.findViewById(R.id.genre_text)
         genreArrow = view.findViewById(R.id.genre_arrow)
-        optionRomance = view.findViewById(R.id.option_romance)
-        optionMystery = view.findViewById(R.id.option_mystery)
-        optionFantasy = view.findViewById(R.id.option_fantasy)
-        optionScienceFiction = view.findViewById(R.id.option_science_fiction)
-        optionThriller = view.findViewById(R.id.option_thriller)
-        optionHistoricalFiction = view.findViewById(R.id.option_historical_fiction)
+        val optionRomance = view.findViewById<TextView>(R.id.option_romance)
+        val optionMystery = view.findViewById<TextView>(R.id.option_mystery)
+        val optionFantasy = view.findViewById<TextView>(R.id.option_fantasy)
+        val optionScienceFiction = view.findViewById<TextView>(R.id.option_science_fiction)
+        val optionThriller = view.findViewById<TextView>(R.id.option_thriller)
+        val optionHistoricalFiction = view.findViewById<TextView>(R.id.option_historical_fiction)
 
         // Start Writing Button
         startWritingButton = view.findViewById(R.id.start_writing_button)
 
 
-        // --- Set up all click listeners ---
+        // --- Set up all click listeners and data ---
 
-        // Language section
+        // Set up the back button listener
+        backArrow.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        // Language section listeners
         languageRow.setOnClickListener {
             toggleOptions(languageOptionsContainer, languageArrow)
         }
@@ -102,21 +105,21 @@ class CompleteBookInfoFragment : Fragment() {
             selectOption(languageText, languageOptionsContainer, languageArrow, optionUkEnglish.text.toString())
         }
 
-        // Book Type section
+        // Book Type section listeners
         bookTypeRow.setOnClickListener {
             toggleOptions(bookTypeOptionsContainer, bookTypeArrow)
         }
         optionFanFiction.setOnClickListener {
             selectOption(bookTypeText, bookTypeOptionsContainer, bookTypeArrow, optionFanFiction.text.toString())
         }
-        varoptionNovels.setOnClickListener {
-            selectOption(bookTypeText, bookTypeOptionsContainer, bookTypeArrow, varoptionNovels.text.toString())
+        optionNovels.setOnClickListener {
+            selectOption(bookTypeText, bookTypeOptionsContainer, bookTypeArrow, optionNovels.text.toString())
         }
         optionShortStory.setOnClickListener {
             selectOption(bookTypeText, bookTypeOptionsContainer, bookTypeArrow, optionShortStory.text.toString())
         }
 
-        // Genre section
+        // Genre section listeners
         genreRow.setOnClickListener {
             toggleOptions(genreOptionsContainer, genreArrow)
         }
@@ -139,10 +142,10 @@ class CompleteBookInfoFragment : Fragment() {
             selectOption(genreText, genreOptionsContainer, genreArrow, optionHistoricalFiction.text.toString())
         }
 
-        // Start Writing Button
+        // Start Writing Button listener
         startWritingButton.setOnClickListener {
-            // TODO: Implement the logic for starting to write
-            // e.g., navigate to the next screen or save the selected data
+            // TODO: Implement the logic for sending data to database
+            findNavController().navigate(R.id.action_completeBookInfoFragment_to_writeChaptersFragment)
         }
     }
 
@@ -168,7 +171,6 @@ class CompleteBookInfoFragment : Fragment() {
         arrow.animate().rotation(0f).setDuration(300).start()
     }
 
-    // Optional: a standard way to create a Fragment instance
     companion object {
         fun newInstance() = CompleteBookInfoFragment()
     }
