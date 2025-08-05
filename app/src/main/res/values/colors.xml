@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="novel_background">#FFFFFF</color>
+    <color name="novel_card_background">#F0F2F5</color>
+    <color name="novel_text_primary">#000000</color>
+    <color name="novel_text_secondary">#65676B</color>
+    <color name="novel_button_text">#000000</color>
+    <color name="reader_light_bg">#FFFFFF</color>
+    <color name="reader_light_text">#212121</color>
+    <color name="reader_panel_bg">#F0F2F5</color>
+
+    <color name="reader_dark_bg">#18191A</color>
+    <color name="reader_dark_text">#E4E6EB</color>
+    <color name="reader_dark_panel_bg">#242526</color>
+</resources>
