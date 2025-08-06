@@ -42,32 +42,14 @@ class BecomeWriterFragment : Fragment() {
 
         // Set click listener for the back arrow
         backArrow.setOnClickListener {
-            // Navigate back (e.g., pop the back stack or finish the activity)
-            // If using AndroidX Navigation Component:
             findNavController().navigateUp()
-            // If not using Navigation Component, and hosted in an Activity:
-            // requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        // Set click listener for "Create a new book" card
         createNewBookCard.setOnClickListener {
-            // TODO: Implement navigation to the "Add Title" screen (fragment_add_title.xml)
-            // Example using AndroidX Navigation Component:
-            // findNavController().navigate(R.id.action_becomeWriterFragment_to_addTitleFragment)
-            // You would define this action in your navigation graph XML.
-
-            // Example if manually replacing fragments (less recommended for complex navigation):
-            // parentFragmentManager.beginTransaction()
-            //     .replace(R.id.fragmentContainer, AddTitleFragment.newInstance())
-            //     .addToBackStack(null)
-            //     .commit()
+            findNavController().navigate(R.id.action_becomeWriterFragment_to_addTitleFragment)
         }
-
-        // Set click listener for "Go write chapters first" card
         goWriteChaptersCard.setOnClickListener {
-            // TODO: Implement navigation to the "Write Chapters" screen or similar
-            // Example using AndroidX Navigation Component:
-            // findNavController().navigate(R.id.action_becomeWriterFragment_to_writeChaptersFragment)
+            findNavController().navigate(R.id.action_becomeWriterFragment_to_writeChaptersFragment)
         }
     }
 

@@ -1,7 +1,8 @@
 package com.example.novelonline
 
-import android.app.Activity
 
-class MainActivity : Activity() {
+import androidx.appcompat.app.AppCompatActivity
 
+
+class MainActivity : AppCompatActivity() {
 }

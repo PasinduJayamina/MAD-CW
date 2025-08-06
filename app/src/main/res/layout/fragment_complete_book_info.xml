@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/completeBookInfoFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E0E0E0">
+    android:background="#E0E0E0"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:layout_height="50dp"
         android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:clickable="true"
             android:focusable="true"
+            android:paddingEnd="24dp"
             android:text="&lt;"
-            android:textSize="24sp"
             android:textColor="#000000"
-            android:textStyle="bold"
-            android:paddingEnd="16dp" />
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,69 +45,83 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/rounded_white_card_background_top_only"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/rounded_white_card_background_top_only"
+            android:orientation="vertical"
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="#EEEEEE" />
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="24dp"
                 android:text="Choose the language and genre for your work to help us find the right readers for you."
-                android:textSize="14sp"
                 android:textColor="#666666"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="24dp" />
-
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+                android:background="#EEEEEE" />
 
             <LinearLayout
                 android:id="@+id/language_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:text="&#x1F310;"
-                    android:textSize="20sp"
                     android:textColor="#000000"
-                    android:layout_marginEnd="16dp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Language"
-                    android:textSize="16sp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/language_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:text="English"
-                    android:textSize="16sp"
                     android:textColor="#888888"
-                    android:layout_marginEnd="8dp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/language_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="&gt;"
-                    android:textSize="20sp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -114,80 +129,83 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
                 android:paddingStart="64dp"
-                android:paddingEnd="16dp">
+                android:paddingEnd="16dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/option_american_english"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="American English"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
+                    android:background="?android:attr/selectableItemBackground"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:text="American English"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/option_uk_english"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="UK English"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
+                    android:background="?android:attr/selectableItemBackground"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:text="UK English"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- ... (Language section as before) ... -->
-
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="#EEEEEE" />
 
             <LinearLayout
                 android:id="@+id/book_type_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:text="&#x1F4D6;"
-                    android:textSize="20sp"
                     android:textColor="#000000"
-                    android:layout_marginEnd="16dp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Book Type"
-                    android:textSize="16sp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/book_type_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:text="Novels"
-                    android:textSize="16sp"
                     android:textColor="#888888"
-                    android:layout_marginEnd="8dp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/book_type_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="&gt;"
-                    android:textSize="20sp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -195,96 +213,101 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
                 android:paddingStart="64dp"
-                android:paddingEnd="16dp">
+                android:paddingEnd="16dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/option_fan_fiction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fan-fiction"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Fan-fiction"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/option_novels"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Novels"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Novels"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/option_short_story"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Short story"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Short story"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="#EEEEEE" />
 
             <LinearLayout
                 android:id="@+id/genre_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:text="&#x1F4EE;"
-                    android:textSize="20sp"
                     android:textColor="#000000"
-                    android:layout_marginEnd="16dp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Genre"
-                    android:textSize="16sp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/genre_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:layout_marginEnd="8dp"
                     android:hint="Select Genre"
-                    android:textSize="16sp"
+                    android:text=""
                     android:textColor="#888888"
-                    android:layout_marginEnd="8dp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/genre_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="&gt;"
-                    android:textSize="20sp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -292,83 +315,87 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
                 android:paddingStart="64dp"
-                android:paddingEnd="16dp">
+                android:paddingEnd="16dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/option_romance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Romance"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Romance"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/option_mystery"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mystery"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Mystery"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/option_fantasy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fantasy"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Fantasy"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/option_science_fiction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Science Fiction"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Science Fiction"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/option_thriller"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Thriller"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Thriller"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/option_historical_fiction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Historical Fiction"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Historical Fiction"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
             </LinearLayout>
 
 
@@ -379,16 +406,16 @@
         android:id="@+id/start_writing_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/rounded_grey_button_background"
+        android:elevation="4dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:text="Start writing"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:background="@drawable/rounded_grey_button_background"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:elevation="4dp" />
+        android:textStyle="bold" />
 </LinearLayout>
