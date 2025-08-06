@@ -15,22 +15,25 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val role = arguments?.getString("user_role") ?: "guest"
+
+        // Redirect admin to AdminDashboardFragment immediately
+        if (role.lowercase() == "admin") {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, AdminDashboardFragment())
+                .commit()
+            return null
+        }
+
+        // Inflate this fragment's UI for users (or others)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         val welcomeText = view.findViewById<TextView>(R.id.textViewWelcome)
         val roleText = view.findViewById<TextView>(R.id.textViewRole)
         val logoutButton = view.findViewById<Button>(R.id.buttonLogout)
 
-        val role = arguments?.getString("user_role") ?: "guest"
-
-        welcomeText.text = when (role) {
-            "admin" -> "Welcome Admin!"
-            "reader" -> "Welcome Reader!"
-            "writer" -> "Welcome Writer!"
-            else -> "Welcome Guest!"
-        }
-
-        roleText.text = "Your role: ${role.capitalize()}"
+        welcomeText.text = if (role.lowercase() == "user") "Welcome User!" else ""
+        roleText.text = "Your role: ${role.replaceFirstChar { it.uppercase() }}"
 
         logoutButton.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -41,4 +44,3 @@ class HomeFragment : Fragment() {
         return view
     }
 }
-

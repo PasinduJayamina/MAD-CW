@@ -24,26 +24,16 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-
 
         val firstNameEditText = view.findViewById<EditText>(R.id.editTextFirstName)
         val lastNameEditText = view.findViewById<EditText>(R.id.editTextLastName)
         val emailEditText = view.findViewById<EditText>(R.id.editTextEmail)
         val passwordEditText = view.findViewById<EditText>(R.id.editTextPassword)
         val confirmPasswordEditText = view.findViewById<EditText>(R.id.editTextConfirmPassword)
-        val spinnerRole = view.findViewById<Spinner>(R.id.spinnerRole)
         val signUpButton = view.findViewById<Button>(R.id.buttonSignUp)
         val backText = view.findViewById<TextView>(R.id.textViewBack)
-
-
-        val roles = arrayOf("Select Role", "reader", "writer")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, roles)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerRole.adapter = adapter
-
 
         signUpButton.setOnClickListener {
             val firstName = firstNameEditText.text.toString().trim()
@@ -51,7 +41,6 @@ class SignUpFragment : Fragment() {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString()
             val confirmPassword = confirmPasswordEditText.text.toString()
-            val role = spinnerRole.selectedItem.toString()
 
             when {
                 firstName.isEmpty() -> showError(firstNameEditText, "First name required")
@@ -61,11 +50,9 @@ class SignUpFragment : Fragment() {
                 password.isEmpty() -> showError(passwordEditText, "Password required")
                 password.length < 6 -> showError(passwordEditText, "Password must be at least 6 characters")
                 password != confirmPassword -> showError(confirmPasswordEditText, "Passwords don't match")
-                role == "Select Role" -> Toast.makeText(requireContext(), "Please select a role", Toast.LENGTH_SHORT).show()
-                else -> registerUser(email, password, firstName, lastName, role)
+                else -> registerUser(email, password, firstName, lastName)
             }
         }
-
 
         backText.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -76,8 +63,7 @@ class SignUpFragment : Fragment() {
         email: String,
         password: String,
         firstName: String,
-        lastName: String,
-        role: String
+        lastName: String
     ) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { result ->
@@ -88,7 +74,7 @@ class SignUpFragment : Fragment() {
                     "email" to email,
                     "firstName" to firstName,
                     "lastName" to lastName,
-                    "role" to role
+                    "role" to "user"
                 )
 
                 firestore.collection("users").document(uid)
