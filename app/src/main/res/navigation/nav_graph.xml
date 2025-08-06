@@ -35,7 +35,7 @@
         android:label="Write Chapters"
         tools:layout="@layout/fragment_write_chapters" >
         <action
-            android:id="@+id/action_writeChaptersFragment_to_yourWorksFragment2"
+                android:id="@+id/action_writeChaptersFragment_to_yourWorksFragment"
             app:destination="@id/yourWorksFragment" />
     </fragment>
 

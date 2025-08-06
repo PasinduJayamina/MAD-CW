@@ -247,6 +247,7 @@ class EditBookDetailsFragment : Fragment() {
 
         createChapterButton.setOnClickListener {
             // TODO: Logic to create a new chapter for this book
+            findNavController().navigate(R.id.action_editBookDetailFragment_to_writeChaptersFragment)
             Toast.makeText(requireContext(), "Create Chapter clicked!", Toast.LENGTH_SHORT).show()
         }
 
