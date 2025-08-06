@@ -93,6 +93,7 @@ class WriteChaptersFragment : Fragment() {
         saveButton.setOnClickListener {
             // TODO: Implement save chapter logic
             // You might want to save chapterTitleEditText.text.toString() and mainTextEditText.text.toString()
+            findNavController().navigate(R.id.action_writeChaptersFragment_to_yourWorksFragment)
         }
         undoButton.setOnClickListener {
             // TODO: Implement undo logic (requires managing text history)
