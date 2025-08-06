@@ -17,7 +17,7 @@ class HomeFragment : Fragment() {
     ): View? {
         val role = arguments?.getString("user_role") ?: "guest"
 
-        // Redirect admin to AdminDashboardFragment immediately
+
         if (role.lowercase() == "admin") {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, AdminDashboardFragment())
@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
             return null
         }
 
-        // Inflate this fragment's UI for users (or others)
+
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         val welcomeText = view.findViewById<TextView>(R.id.textViewWelcome)
