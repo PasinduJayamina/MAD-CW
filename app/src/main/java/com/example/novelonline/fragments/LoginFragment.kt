@@ -37,27 +37,19 @@ class LoginFragment : Fragment() {
         }
 
         signUpText.setOnClickListener {
-            safeNavigateToSignUp()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, SignUpFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         return view
     }
 
-    private fun safeNavigateToSignUp() {
-        try {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, SignUpFragment())
-                .addToBackStack("loginToSignUp")
-                .commit()
-        } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Please try again", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun attemptLogin(email: String, password: String) {
         UserRepository.login(email, password) { success, role, error ->
-            if (success) {
-                navigateToHome(role!!)
+            if (success && role != null) {
+                navigateToHome(role)
             } else {
                 Toast.makeText(requireContext(), "Login failed: $error", Toast.LENGTH_SHORT).show()
             }
@@ -65,10 +57,12 @@ class LoginFragment : Fragment() {
     }
 
     private fun navigateToHome(role: String) {
+        val homeFragment = HomeFragment()
+        homeFragment.arguments = Bundle().apply {
+            putString("user_role", role)
+        }
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, HomeFragment().apply {
-                arguments = Bundle().apply { putString("user_role", role) }
-            })
+            .replace(R.id.fragmentContainer, homeFragment)
             .commit()
     }
 
