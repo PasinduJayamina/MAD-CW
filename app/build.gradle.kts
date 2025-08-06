@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.gms.google-services") //
-    id("androidx.navigation.safeargs.kotlin")
+    // Keep these plugins from the hotfix branch
+    id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "2.0.21"
+    // Keep the safe-args plugin from your feature/home branch
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 android {
@@ -44,28 +46,27 @@ android {
 }
 
 dependencies {
+    // Core and testing dependencies (common to both)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation("androidx.recyclerview:recyclerview:1.3.0") // Or the latest stable version
-    implementation("androidx.cardview:cardview:1.0.0") // For Material Design cards
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.androidx.fragment)
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.firebase.firestore.ktx)
-    implementation(libs.firebase.common.ktx)
-    implementation(libs.androidx.navigation.fragment.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    val navVersion = "2.7.3"
-    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    // Your UI dependencies from feature/home (using newer versions)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
+    // Firebase dependencies from hotfix
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.fragment)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.common.ktx)
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.firebase:firebase-firestore:24.11.0")
 }

@@ -1,10 +1,11 @@
-package com.example.novelonline.models // Adjust package as needed
+package com.example.novelonline.models
 
 data class Book(
-    val id: String,
-    val coverUrl: String?, // URL to the book cover image
-    val title: String,
-    val chapterCount: Int,
-    val lastUpdated: String, // Or use a Date/Timestamp type
-    val createdOn: String // Or use a Date/Timestamp type
+    val id: String = "",
+    val title: String = "",
+    val author: String = "",
+    val coverImageUrl: String = "",
+    val chapterCount: Int = 0,
+    val lastUpdated: String = "",
+    val createdOn: String = ""
 )
