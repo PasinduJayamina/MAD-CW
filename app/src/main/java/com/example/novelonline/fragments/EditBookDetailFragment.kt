@@ -339,7 +339,7 @@ class EditBookDetailsFragment : Fragment() {
         // Simulate fetching book data
         currentBook = Book(
             id = bookId,
-            coverUrl = "https://placehold.co/96x128/000000/FFFFFF?text=BookCover", // Example image URL
+            coverImageUrl  = "https://placehold.co/96x128/000000/FFFFFF?text=BookCover", // Example image URL
             title = "The Ancient Scroll",
             chapterCount = 10,
             lastUpdated = "July 29, 2025",
@@ -353,9 +353,9 @@ class EditBookDetailsFragment : Fragment() {
             titleEditText.setText(book.title)
 
             // Load book cover image
-            if (!book.coverUrl.isNullOrEmpty()) {
+            if (!book.coverImageUrl .isNullOrEmpty()) {
                 Glide.with(this)
-                    .load(book.coverUrl)
+                    .load(book.coverImageUrl )
                     .placeholder(R.drawable.placeholder_book_cover) // Default if loading
                     .error(R.drawable.placeholder_book_cover) // Default if error
                     .into(bookCoverImageView)

@@ -1,4 +1,4 @@
-package com.example.mobilecw.repository
+package com.example.novelonline.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

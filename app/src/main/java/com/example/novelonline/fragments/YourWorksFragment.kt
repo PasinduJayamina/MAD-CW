@@ -37,9 +37,33 @@ class YourWorksFragment : Fragment() {
         Chapter("c3", "b2", "Untitled Chapter", "July 26, 2025", 800)
     )
     private val books = mutableListOf(
-        Book("b1", null, "The Dragon's Ascent", 15, "July 29, 2025", "June 1, 2025"),
-        Book("b2", null, "Eternal Embrace", 8, "July 20, 2025", "May 10, 2025"),
-        Book("b3", null, "Echoes of Tomorrow", 20, "July 25, 2025", "April 1, 2025")
+        Book(
+            id = "b1",
+            title = "The Dragon's Ascent",
+            author = "Your Name", // Added author
+            coverImageUrl = "", // Must be a String, not null or a number
+            chapterCount = 15,
+            lastUpdated = "July 29, 2025",
+            createdOn = "June 1, 2025"
+        ),
+        Book(
+            id = "b2",
+            title = "Eternal Embrace",
+            author = "Your Name",
+            coverImageUrl = "",
+            chapterCount = 8,
+            lastUpdated = "July 20, 2025",
+            createdOn = "May 10, 2025"
+        ),
+        Book(
+            id = "b3",
+            title = "Echoes of Tomorrow",
+            author = "Your Name",
+            coverImageUrl = "",
+            chapterCount = 20,
+            lastUpdated = "July 25, 2025",
+            createdOn = "April 1, 2025"
+        )
     )
 
     // Adapters need to be class-level to be able to notify them of data changes

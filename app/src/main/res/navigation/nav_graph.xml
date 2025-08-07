@@ -3,14 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
 
-    <!-- Fragments from your feature/home branch -->
+    <!-- Login/Sign Up Flow -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.novelonline.ui.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.novelonline.ui.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+
+    <!-- Main App Fragments -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.novelonline.ui.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <!-- Added argument to accept the user's role -->
+        <argument
+            android:name="role"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/exploreFragment"
@@ -44,7 +71,7 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_home" />
 
-    <!-- Fragments from the hotfix branch (Writer Features) -->
+    <!-- Writer Feature Fragments -->
     <fragment
         android:id="@+id/becomeWriterFragment"
         android:name="com.example.novelonline.fragments.BecomeWriterFragment"

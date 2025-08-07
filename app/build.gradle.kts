@@ -1,21 +1,20 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    // Keep these plugins from the hotfix branch
-    id("com.google.gms.google-services")
-    kotlin("plugin.serialization") version "2.0.21"
-    // Keep the safe-args plugin from your feature/home branch
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    alias(libs.plugins.google.gms.services)
 }
 
 android {
     namespace = "com.example.novelonline"
-    compileSdk = 35
+    // Changed to 34 to resolve the AGP warning. This is recommended.
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.novelonline"
         minSdk = 24
-        targetSdk = 35
+        // Changed to 34 to match compileSdk
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -31,22 +30,21 @@ android {
             )
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
-    // Core and testing dependencies (common to both)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -56,17 +54,22 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Your UI dependencies from feature/home (using newer versions)
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation(libs.glide)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
-    // Firebase dependencies from hotfix
+    // Firebase dependencies
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+
+    // Add the dependencies for Firebase products you want to use
+    // Versions are managed by the BoM, so they are not specified here
     implementation(libs.firebase.auth.ktx)
-    implementation(libs.androidx.fragment)
     implementation(libs.firebase.firestore.ktx)
-    implementation(libs.firebase.common.ktx)
-    implementation("com.google.firebase:firebase-auth:22.3.0")
-    implementation("com.google.firebase:firebase-firestore:24.11.0")
+
+    // This is for fragment management, not a Firebase library
+    implementation(libs.androidx.fragment)
+
+    // REMOVED implementation(libs.firebase.common.ktx) because it's handled by the BoM
 }

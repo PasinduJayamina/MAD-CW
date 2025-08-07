@@ -4,7 +4,7 @@ data class Book(
     val id: String = "",
     val title: String = "",
     val author: String = "",
-    val coverImageUrl: String = "",
+    val coverImageUrl: String? = null,
     val chapterCount: Int = 0,
     val lastUpdated: String = "",
     val createdOn: String = ""
