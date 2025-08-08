@@ -52,7 +52,7 @@ class LoginFragment : Fragment() {
         UserRepository.login(email, password) { success, role, error ->
             if (success && role != null) {
                 // Use the Navigation Component to go to the HomeFragment
-                val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment(role)
+                val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
                 findNavController().navigate(action)
             } else {
                 Toast.makeText(requireContext(), "Login failed: $error", Toast.LENGTH_SHORT).show()

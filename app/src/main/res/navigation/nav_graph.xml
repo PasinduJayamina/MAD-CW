@@ -33,10 +33,9 @@
         android:name="com.example.novelonline.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
-        <!-- Added argument to accept the user's role -->
-        <argument
-            android:name="role"
-            app:argType="string" />
+        <action
+            android:id="@+id/action_homeFragment_to_genreDetailFragment"
+            app:destination="@id/genreDetailFragment" />
     </fragment>
 
     <fragment
@@ -47,6 +46,7 @@
         <action
             android:id="@+id/action_exploreFragment_to_genreDetailFragment"
             app:destination="@id/genreDetailFragment" />
+
     </fragment>
 
     <fragment
@@ -70,6 +70,31 @@
         android:name="com.example.novelonline.ui.HomeFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_home" />
+
+    <!-- reader Feature Fragments -->
+    <fragment
+        android:id="@+id/ReaderDashboardFragment"
+        android:name="com.example.novelonline.fragments.ReaderDashboardFragment"
+        android:label="reader dashboard"
+        tools:layout="@layout/fragment_reader_dashboard" >
+        <action
+            android:id="@+id/action_readerDashboardFragment_to_becomeWriterFragment"
+            app:destination="@id/becomeWriterFragment" />
+        <action
+            android:id="@+id/action_readerDashboardFragment_to_yourWorksFragment"
+            app:destination="@id/yourWorksFragment" />
+        <action
+            android:id="@+id/action_readerDashboardFragment_to_bookFairsFragment"
+            app:destination="@id/bookFairsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookFairsFragment"
+        android:name="com.example.novelonline.fragments.BookFairsFragment"
+        android:label="Bok Fairs"
+        tools:layout="@layout/fragment_book_fairs" >
+
+    </fragment>
 
     <!-- Writer Feature Fragments -->
     <fragment

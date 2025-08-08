@@ -18,8 +18,6 @@
     <string name="genres_title">Genres</string>
     <string name="back_button_description">Back button</string>
 
-    <string name="app_name" tools:ignore="DuplicateDefinition">NovelOnline</string>
-
     <string name="placeholder_chapter_content">
         <![CDATA[
         <p>This is placeholder content for a chapter. This text can be a long string of words that fills up the reading screen. It\'s important to have some content here for testing the layout and scrolling behavior.</p>

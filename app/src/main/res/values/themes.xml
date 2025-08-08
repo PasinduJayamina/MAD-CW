@@ -16,6 +16,10 @@
     </style>
 
     <style name="Theme.NovelOnline" parent="Base.Theme.NovelOnline" />
+    <style name="CircularImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 
     <!-- Style for rounded corner cards -->
     <style name="App.CardView" parent="Widget.Material3.CardView.Elevated">
