@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.novelonline.BuildConfig // <-- ADD THIS IMPORT
 import com.example.novelonline.adapters.BookFairsAdapter
 import com.example.novelonline.databinding.FragmentBookFairsBinding
 import com.example.novelonline.models.BookFair
@@ -52,9 +53,8 @@ class BookFairsFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var adapter: BookFairsAdapter
 
-    // **IMPORTANT**: You must replace this with your own Google Maps API Key.
-    // Go to the Google Cloud Console, enable the "Directions API", and create an API key.
-    private val GOOGLE_MAPS_API_KEY = "YOUR_API_KEY_HERE"
+    // This will now work correctly after rebuilding and adding the import
+    private val GOOGLE_MAPS_API_KEY = BuildConfig.MAPS_API_KEY
 
     private val bookFairs = mutableListOf(
         BookFair("Colombo International Book Fair", "BMICH, Colombo 07", "+94112546241", "2025-09-19", "2025-09-28", 6.9048, 79.8612),
@@ -157,13 +157,13 @@ class BookFairsFragment : Fragment() {
     }
 
     private suspend fun getDrivingDistance(origin: Location, destination: BookFair): String? {
-        if (GOOGLE_MAPS_API_KEY == "AIzaSyAqhrN4rhZNkcIXMGCcw2aWUr8ljhGXJ2I") {
-            Log.e("BookFairsFragment", "Google Maps API Key is not set.")
+        if (GOOGLE_MAPS_API_KEY.isEmpty() || GOOGLE_MAPS_API_KEY == "YOUR_API_KEY_HERE") {
+            Log.e("BookFairsFragment", "Google Maps API Key is not set in local.properties.")
             return null
         }
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://maps.googleapis.com/")
+            .baseUrl("[https://maps.googleapis.com/](https://maps.googleapis.com/)")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
