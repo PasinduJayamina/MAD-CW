@@ -1,19 +1,25 @@
 package com.example.novelonline.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.novelonline.R
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class CompleteBookInfoFragment : Fragment() {
 
     // --- Declare Views ---
+    private lateinit var novelId: String
 
     // Back Arrow
     private lateinit var backArrow: TextView
@@ -48,8 +54,10 @@ class CompleteBookInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // --- Initialize views ---
+        // Retrieve the novelId from the arguments
+        val args: CompleteBookInfoFragmentArgs by navArgs()
+        novelId = args.novelId
+        // You can now use novelId to reference the document in Firestore
 
         // Back Arrow
         backArrow = view.findViewById(R.id.back_arrow)
@@ -144,9 +152,46 @@ class CompleteBookInfoFragment : Fragment() {
 
         // Start Writing Button listener
         startWritingButton.setOnClickListener {
-            // TODO: Implement the logic for sending data to database
+            // Get the selected values from your TextViews
+            val selectedLanguage = languageText.text.toString()
+            val selectedBookType = bookTypeText.text.toString()
+            val selectedGenre = genreText.text.toString()
+
+            // You'll also need a way to handle multiple selected genres
+            // For now, let's assume one is selected.
+
+            // Now, you can update Firestore
+            updateNovelInFirestore(novelId, selectedLanguage, selectedBookType, selectedGenre)
+
+            // Navigate to the next fragment
             findNavController().navigate(R.id.action_completeBookInfoFragment_to_writeChaptersFragment)
         }
+    }
+    private fun updateNovelInFirestore(
+        novelId: String,
+        language: String,
+        bookType: String,
+        genre: String
+    ) {
+        val db = FirebaseFirestore.getInstance()
+        val novelRef = db.collection("books").document(novelId)
+
+        val updates = hashMapOf<String, Any>(
+            "language" to language,
+            "bookType" to bookType,
+            "genres" to listOf(genre), // Assuming one genre for now
+            "lastUpdated" to Date()
+        )
+
+        novelRef.update(updates)
+            .addOnSuccessListener {
+                Log.d("CompleteBookInfoFragment", "Document successfully updated!")
+                Toast.makeText(requireContext(), "Book info saved!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Log.w("CompleteBookInfoFragment", "Error updating document", e)
+                Toast.makeText(requireContext(), "Error saving info: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     /**
