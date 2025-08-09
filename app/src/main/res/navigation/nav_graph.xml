@@ -34,8 +34,8 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_genreDetailFragment"
-            app:destination="@id/genreDetailFragment" />
+            android:id="@+id/action_homeFragment_to_NovelDetailsFragment"
+            app:destination="@id/NovelDetails" />
     </fragment>
 
     <fragment
@@ -120,7 +120,6 @@
         <action
             android:id="@+id/action_NovelDetails_to_ReviewFragment"
             app:destination="@id/ReviewFragment" />
-
     </fragment>
 
     <!-- Writer Feature Fragments -->

@@ -46,7 +46,7 @@ class ExploreFragment : Fragment() {
         val genres = listOf(
             Genre("Fantasy", "[https://placehold.co/80x80/1a2e07/ffffff?text=F](https://placehold.co/80x80/1a2e07/ffffff?text=F)"),
             Genre("Romance", "[https://placehold.co/80x80/7d1538/ffffff?text=R](https://placehold.co/80x80/7d1538/ffffff?text=R)"),
-            Genre("Sci-Fi", "[https://placehold.co/80x80/0c4a6e/ffffff?text=S](https://placehold.co/80x80/0c4a6e/ffffff?text=S)"),
+            Genre("Science Fiction", "[https://placehold.co/80x80/0c4a6e/ffffff?text=S](https://placehold.co/80x80/0c4a6e/ffffff?text=S)"),
             Genre("Mystery", "[https://placehold.co/80x80/4a044e/ffffff?text=M](https://placehold.co/80x80/4a044e/ffffff?text=M)"),
             Genre("Thriller", "[https://placehold.co/80x80/7f1d1d/ffffff?text=T](https://placehold.co/80x80/7f1d1d/ffffff?text=T)"),
             Genre("Historical Fiction", "[https://placehold.co/80x80/78350f/ffffff?text=H](https://placehold.co/80x80/78350f/ffffff?text=H)"),
