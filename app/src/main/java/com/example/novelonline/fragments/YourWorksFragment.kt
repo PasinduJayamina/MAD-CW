@@ -80,8 +80,15 @@ class YourWorksFragment : Fragment() {
         booksAdapter = BooksAdapter(
             books,
             onItemClick = { book ->
-                // TODO: Handle click on a book (e.g., open book details, list published chapters)
-                Log.d("YourWorksFragment", "Book card clicked: ${book.title}")
+                val novelId = book.id
+                val pdfUrl = book.pdfUrl // Assume your 'Book' class has a 'pdfUrl' property
+
+                // Use Safe Args to navigate and pass the arguments.
+                val action = YourWorksFragmentDirections.actionYourWorksFragmentToEditBookDetailFragment2(
+                    novelId = novelId,
+                    pdfUrl = pdfUrl
+                )
+                findNavController().navigate(action)
             },
             onDeleteClick = { book ->
                 showDeleteConfirmationDialog(
@@ -126,7 +133,8 @@ class YourWorksFragment : Fragment() {
                 if (booksSnapshot != null) {
                     booksFromBooksCollection.clear()
                     for (doc in booksSnapshot.documents) {
-                        val book = doc.toObject(Book::class.java)?.copy(sourceCollection = "books")
+                        // --- CORRECTED: Use the document ID for the 'id' field ---
+                        val book = doc.toObject(Book::class.java)?.copy(id = doc.id, sourceCollection = "books")
                         book?.let {
                             booksFromBooksCollection.add(it)
                         }
@@ -149,7 +157,8 @@ class YourWorksFragment : Fragment() {
                 if (uploadedBooksSnapshot != null) {
                     booksFromUploadedBooksCollection.clear()
                     for (doc in uploadedBooksSnapshot.documents) {
-                        val book = doc.toObject(Book::class.java)?.copy(sourceCollection = "uploaded books")
+                        // --- CORRECTED: Use the document ID for the 'id' field ---
+                        val book = doc.toObject(Book::class.java)?.copy(id = doc.id, sourceCollection = "uploaded books")
                         book?.let {
                             booksFromUploadedBooksCollection.add(it)
                         }
@@ -166,7 +175,6 @@ class YourWorksFragment : Fragment() {
         books.addAll(booksFromBooksCollection)
         books.addAll(booksFromUploadedBooksCollection)
         // Sort the combined list by a relevant field, e.g., creation date
-        // Note: 'createdOn' in your Book data class is a String, so we'll need to sort on that.
         books.sortByDescending { it.createdOn }
         booksAdapter.notifyDataSetChanged()
     }

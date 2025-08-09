@@ -18,7 +18,7 @@ data class Book(
     val genres: List<String> = emptyList(),
     val tags: List<String>? = null,
     val length: String? = null,
-    val pdfUrl: String? = null,
+    val pdfUrl: String = "",
     val synopsis: String? = null,
     val warningNotice: String? = null,
     val sourceCollection: String = ""

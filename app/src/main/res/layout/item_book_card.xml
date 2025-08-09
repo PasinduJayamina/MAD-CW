@@ -23,12 +23,10 @@
             android:background="#E0E0E0"
             android:gravity="center"
             android:layout_marginEnd="16dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cover"
-                android:textSize="12sp"
-                android:textColor="#A0A0A0" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/book_cover_image_view"/>
         </LinearLayout>
 
         <LinearLayout
