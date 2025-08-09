@@ -22,7 +22,7 @@ class GenreDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: GenreDetailFragmentArgs by navArgs()
-    private lateinit var bookAdapter: BookAdapter
+    private lateinit var booksAdapter: BookAdapter
 
     // Firestore instance
     private lateinit var firestore: FirebaseFirestore
@@ -54,18 +54,19 @@ class GenreDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        bookAdapter = BookAdapter(BookAdapter.VIEW_TYPE_GRID) { book ->
-            // TODO: Navigate to book detail screen (Task for member GAHDSE242F-012)
-            Toast.makeText(context, "Clicked on ${book.title}", Toast.LENGTH_SHORT).show()
+        val onBookClick: (Book) -> Unit = { book ->
+            val novelId = book.id
+            val action = GenreDetailFragmentDirections.actionGenreDetailFragmentToNovelDetailsFragment(book.id)
+            findNavController().navigate(action)
         }
-        binding.rvGenreBooks.adapter = bookAdapter
+        booksAdapter = BookAdapter(BookAdapter.VIEW_TYPE_GRID, onBookClick)
+        binding.rvGenreBooks.adapter = booksAdapter
     }
 
     private fun loadBooksForGenre(genreName: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.rvGenreBooks.visibility = View.GONE
 
-        // Query Firestore for books where the 'genre' field is equal to the genreName.
         firestore.collection("books")
             .whereEqualTo("genre", genreName)
             .get()
@@ -75,12 +76,12 @@ class GenreDetailFragment : Fragment() {
 
                 val booksForGenre = mutableListOf<Book>()
                 for (document in querySnapshot.documents) {
-                    val book = document.toObject(Book::class.java)
+                    val book = document.toObject(Book::class.java)?.copy(id = document.id)
                     book?.let {
                         booksForGenre.add(it)
                     }
                 }
-                bookAdapter.submitList(booksForGenre)
+                booksAdapter.submitList(booksForGenre)
 
                 if (booksForGenre.isEmpty()) {
                     binding.tvNoBooksMessage.visibility = View.VISIBLE

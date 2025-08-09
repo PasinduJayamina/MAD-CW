@@ -89,5 +89,5 @@ dependencies {
 
     // This is for fragment management, not a Firebase library
     implementation(libs.androidx.fragment)
-    implementation("com.google.firebase:firebase-storage-ktx")    // REMOVED implementation(libs.firebase.common.ktx) because it's handled by the BoM
+    implementation("com.google.firebase:firebase-storage-ktx")
 }

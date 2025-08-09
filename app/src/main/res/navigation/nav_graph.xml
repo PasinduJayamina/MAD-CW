@@ -95,9 +95,6 @@
         <action
             android:id="@+id/action_genreDetailFragment_to_novelDetailsFragment"
             app:destination="@id/NovelDetails" >
-            <argument
-                android:name="novelId"
-                app:argType="string" />
         </action>
     </fragment>
 
