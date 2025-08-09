@@ -49,7 +49,7 @@ class BecomeWriterFragment : Fragment() {
             findNavController().navigate(R.id.action_becomeWriterFragment_to_addTitleFragment)
         }
         goWriteChaptersCard.setOnClickListener {
-            findNavController().navigate(R.id.action_becomeWriterFragment_to_writeChaptersFragment)
+            findNavController().navigate(R.id.action_becomeWriterFragment_to_UploadPdfFragment)
         }
     }
 

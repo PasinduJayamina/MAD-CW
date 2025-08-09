@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -22,8 +23,7 @@ class CompleteBookInfoFragment : Fragment() {
     private lateinit var novelId: String
 
     // Back Arrow
-    private lateinit var backArrow: TextView
-
+    private lateinit var backArrow: ImageView
     // Language views
     private lateinit var languageRow: LinearLayout
     private lateinit var languageOptionsContainer: LinearLayout
@@ -60,7 +60,7 @@ class CompleteBookInfoFragment : Fragment() {
         // You can now use novelId to reference the document in Firestore
 
         // Back Arrow
-        backArrow = view.findViewById(R.id.back_arrow)
+        backArrow = view.findViewById(R.id.backArrow)
 
         // Language section
         languageRow = view.findViewById(R.id.language_row)

@@ -132,7 +132,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Go write chapters first"
+            android:text="Upload completed Book"
             android:textSize="18sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
