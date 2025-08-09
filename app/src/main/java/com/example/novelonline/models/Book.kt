@@ -12,5 +12,10 @@ data class Book(
     val createdOn: String = "",   // Changed from Date to String
     val language: String? = null,
     val bookType: String? = null,
-    val genres: List<String> = emptyList()
+    val genres: List<String> = emptyList(),
+    val tags: List<String>? = null,
+    val length: String? = null,
+    val pdfUrl: String? = null,
+    val synopsis: String? = null,
+    val warningNotice: String? = null
 )

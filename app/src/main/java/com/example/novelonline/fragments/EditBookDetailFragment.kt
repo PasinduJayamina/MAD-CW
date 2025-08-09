@@ -21,94 +21,46 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.novelonline.R
 import com.example.novelonline.databinding.FragmentEditBookDetailsBinding
 import com.example.novelonline.models.Book
-import java.text.SimpleDateFormat
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import java.util.Date
-import java.util.Locale
+import java.util.UUID
+import kotlin.collections.ArrayList
 
 class EditBookDetailsFragment : Fragment() {
 
     private var _binding: FragmentEditBookDetailsBinding? = null
     private val binding get() = _binding!!
 
-    // Views from XML
-    private lateinit var backArrow: TextView
-    private lateinit var topBarBookTitle: TextView
-    private lateinit var createChapterButton: Button
-    private lateinit var uploadCoverButton: Button
-    private lateinit var bookCoverImageView: ImageView
-    private lateinit var deleteBookButton: Button
+    // Firebase instances
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
 
-    // Basic Information Section
-    private lateinit var titleRow: LinearLayout
-    private lateinit var bookTitleValue: TextView
-    private lateinit var titleArrow: ImageView
-    private lateinit var titleEditContainer: LinearLayout
-    private lateinit var titleEditText: EditText
+    // Safe Args
+    private lateinit var novelId: String
+    private var pdfUrl: String? = null
+    private var existingCoverImageUrl: String? = null
 
-    private lateinit var languageRow: LinearLayout
-    private lateinit var languageValue: TextView
-    private lateinit var languageArrow: ImageView
-    private lateinit var languageOptionsContainer: LinearLayout
-    private lateinit var optionAmericanEnglish: TextView
-    private lateinit var optionUkEnglish: TextView
+    // Class-level variables to hold current selections
+    private var selectedLanguage: String? = null
+    private var selectedBookType: String? = null
+    private var selectedGenre: String? = null
+    private var selectedWarning: String? = null
+    private var selectedLength: String? = null
 
-    private lateinit var typeRow: LinearLayout
-    private lateinit var typeValue: TextView
-    private lateinit var typeArrow: ImageView
-    private lateinit var typeOptionsContainer: LinearLayout
-    private lateinit var optionFanFiction: TextView
-    private lateinit var optionNovels: TextView
-    private lateinit var optionShortStory: TextView
-
-    private lateinit var genreRow: LinearLayout
-    private lateinit var genreValue: TextView
-    private lateinit var genreArrow: ImageView
-    private lateinit var genreOptionsContainer: LinearLayout
-    private lateinit var optionRomance: TextView
-    private lateinit var optionMystery: TextView
-    private lateinit var optionFantasy: TextView
-    private lateinit var optionScienceFiction: TextView
-    private lateinit var optionThriller: TextView
-    private lateinit var optionHistoricalFiction: TextView
-
-    private lateinit var synopsisRow: LinearLayout
-    private lateinit var synopsisValue: TextView
-    private lateinit var synopsisArrow: ImageView
-    private lateinit var synopsisEditContainer: LinearLayout
-    private lateinit var synopsisEditText: EditText
-
-    private lateinit var tagsRow: LinearLayout
-    private lateinit var tagsValue: TextView
-    private lateinit var tagsArrow: ImageView
-    private lateinit var tagsEditContainer: LinearLayout
-    private lateinit var tagsEditText: EditText
-
-    // More Information Section
-    private lateinit var warningNoticeRow: LinearLayout
-    private lateinit var warningNoticeValue: TextView
-    private lateinit var warningNoticeArrow: ImageView
-    private lateinit var warningNoticeOptionsContainer: LinearLayout
-    private lateinit var optionNoWarning: TextView
-    private lateinit var optionMatureContent: TextView
-    private lateinit var optionGraphicViolence: TextView
-
-    private lateinit var lengthRow: LinearLayout
-    private lateinit var lengthValue: TextView
-    private lateinit var lengthArrow: ImageView
-    private lateinit var lengthOptionsContainer: LinearLayout
-    private lateinit var optionShortLength: TextView
-    private lateinit var optionMediumLength: TextView
-    private lateinit var optionLongLength: TextView
-
+    // Image capture and selection launchers
     private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             imageUri?.let { uri ->
-                Glide.with(this).load(uri).into(bookCoverImageView)
-                // TODO: Upload 'uri' to Firebase Storage
+                uploadCoverImage(uri)
             }
         } else {
             Toast.makeText(requireContext(), "Image capture cancelled", Toast.LENGTH_SHORT).show()
@@ -117,15 +69,13 @@ class EditBookDetailsFragment : Fragment() {
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
-            Glide.with(this).load(uri).into(bookCoverImageView)
-            // TODO: Upload 'uri' to Firebase Storage
+            uploadCoverImage(uri)
         } else {
             Toast.makeText(requireContext(), "Image selection cancelled", Toast.LENGTH_SHORT).show()
         }
     }
 
     private var imageUri: Uri? = null
-    private var currentBook: Book? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -138,136 +88,323 @@ class EditBookDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initializeViews()
+        // Initialize Firebase Firestore and Storage
+        firestore = Firebase.firestore
+        storage = Firebase.storage
 
-        val bookId = arguments?.getString("bookId")
-        if (bookId != null) {
-            loadBookDetails(bookId)
-        } else {
-            Toast.makeText(requireContext(), "No book ID provided.", Toast.LENGTH_SHORT).show()
-            findNavController().navigateUp()
-        }
+        // Retrieve arguments passed via Safe Args
+        val args: EditBookDetailsFragmentArgs by navArgs()
+        novelId = args.novelId
+        pdfUrl = args.pdfUrl
+
+        // Load existing book details from Firestore
+        loadBookDetails(novelId)
 
         setupClickListeners()
         setupTextWatchers()
     }
 
-    private fun initializeViews() {
-        backArrow = binding.backArrow
-        topBarBookTitle = binding.topBarBookTitle
-        createChapterButton = binding.createChapterButton
-        uploadCoverButton = binding.uploadCoverButton
-        bookCoverImageView = binding.bookCoverImageView
-        deleteBookButton = binding.deleteBookButton
-        titleRow = binding.titleRow
-        bookTitleValue = binding.bookTitleValue
-        titleArrow = binding.titleArrow
-        titleEditContainer = binding.titleEditContainer
-        titleEditText = binding.titleEditText
-        languageRow = binding.languageRow
-        languageValue = binding.languageValue
-        languageArrow = binding.languageArrow
-        languageOptionsContainer = binding.languageOptionsContainer
-        optionAmericanEnglish = binding.optionAmericanEnglish
-        optionUkEnglish = binding.optionUkEnglish
-        typeRow = binding.typeRow
-        typeValue = binding.typeValue
-        typeArrow = binding.typeArrow
-        typeOptionsContainer = binding.typeOptionsContainer
-        optionFanFiction = binding.optionFanFiction
-        optionNovels = binding.optionNovels
-        optionShortStory = binding.optionShortStory
-        genreRow = binding.genreRow
-        genreValue = binding.genreValue
-        genreArrow = binding.genreArrow
-        genreOptionsContainer = binding.genreOptionsContainer
-        optionRomance = binding.optionRomance
-        optionMystery = binding.optionMystery
-        optionFantasy = binding.optionFantasy
-        optionScienceFiction = binding.optionScienceFiction
-        optionThriller = binding.optionThriller
-        optionHistoricalFiction = binding.optionHistoricalFiction
-        synopsisRow = binding.synopsisRow
-        synopsisValue = binding.synopsisValue
-        synopsisArrow = binding.synopsisArrow
-        synopsisEditContainer = binding.synopsisEditContainer
-        synopsisEditText = binding.synopsisEditText
-        tagsRow = binding.tagsRow
-        tagsValue = binding.tagsValue
-        tagsArrow = binding.tagsArrow
-        tagsEditContainer = binding.tagsEditContainer
-        tagsEditText = binding.tagsEditText
-        warningNoticeRow = binding.warningNoticeRow
-        warningNoticeValue = binding.warningNoticeValue
-        warningNoticeArrow = binding.warningNoticeArrow
-        warningNoticeOptionsContainer = binding.warningNoticeOptionsContainer
-        optionNoWarning = binding.optionNoWarning
-        optionMatureContent = binding.optionMatureContent
-        optionGraphicViolence = binding.optionGraphicViolence
-        lengthRow = binding.lengthRow
-        lengthValue = binding.lengthValue
-        lengthArrow = binding.lengthArrow
-        lengthOptionsContainer = binding.lengthOptionsContainer
-        optionShortLength = binding.optionShortLength
-        optionMediumLength = binding.optionMediumLength
-        optionLongLength = binding.optionLongLength
-    }
-
     private fun loadBookDetails(bookId: String) {
-        // Simulate fetching book data
-        val dateFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+        val bookRef = firestore.collection("uploaded books").document(bookId)
+        bookRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val book = document.toObject(Book::class.java)
+                    book?.let {
+                        // Populate UI with fetched data
+                        binding.topBarBookTitle.text = it.title
+                        binding.bookTitleValue.text = it.title
+                        binding.titleEditText.setText(it.title)
 
-        currentBook = Book(
-            id = bookId,
-            coverImageUrl = "https://placehold.co/96x128/000000/FFFFFF?text=BookCover",
-            title = "The Ancient Scroll",
-            author = "Pasin",
-            chapterCount = 10,
-            // Convert Date to String to match the Book model
-            lastUpdated = dateFormat.format(Date()),
-            createdOn = dateFormat.format(Date())
-        )
+                        // Populate other fields if they exist
+                        binding.synopsisEditText.setText(it.synopsis)
+                        binding.synopsisValue.text = it.synopsis
+                        binding.tagsEditText.setText(it.tags?.joinToString(", "))
+                        binding.tagsValue.text = it.tags?.joinToString(", ")
 
-        currentBook?.let { book ->
-            topBarBookTitle.text = book.title.ifEmpty { "Edit Book Details" }
-            bookTitleValue.text = book.title.ifEmpty { "Edit Title" }
-            titleEditText.setText(book.title)
+                        // Populate selected options
+                        it.language?.let { selectedLanguage = it; binding.languageValue.text = it }
+                        it.bookType?.let { selectedBookType = it; binding.typeValue.text = it }
+                        it.genres?.let { selectedGenre = it.toString(); binding.genreValue.text =
+                            it.toString()
+                        }
+                        it.warningNotice?.let { selectedWarning = it; binding.warningNoticeValue.text = it }
+                        it.length?.let { selectedLength = it; binding.lengthValue.text = it }
 
-            if (!book.coverImageUrl.isNullOrEmpty()) {
-                Glide.with(this)
-                    .load(book.coverImageUrl)
-                    .placeholder(R.drawable.placeholder_book_cover)
-                    .error(R.drawable.placeholder_book_cover)
-                    .into(bookCoverImageView)
-            } else {
-                bookCoverImageView.setImageResource(R.drawable.placeholder_book_cover)
+                        // Store the cover image URL for potential deletion later
+                        existingCoverImageUrl = it.coverImageUrl
+
+                        // Load cover image if it exists
+                        if (!it.coverImageUrl.isNullOrEmpty()) {
+                            Glide.with(this)
+                                .load(it.coverImageUrl)
+                                .placeholder(R.drawable.placeholder_book_cover)
+                                .error(R.drawable.placeholder_book_cover)
+                                .into(binding.bookCoverImageView)
+                        } else {
+                            binding.bookCoverImageView.setImageResource(R.drawable.placeholder_book_cover)
+                        }
+                    }
+                } else {
+                    Log.d("EditBookDetails", "No such document")
+                    Toast.makeText(requireContext(), "Book not found.", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
+            .addOnFailureListener { e ->
+                Log.e("EditBookDetails", "Error loading book details", e)
+                Toast.makeText(requireContext(), "Error loading book details.", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun setupClickListeners() {
-        backArrow.setOnClickListener { findNavController().navigateUp() }
-        createChapterButton.setOnClickListener {
-            findNavController().navigate(R.id.action_editBookDetailFragment_to_writeChaptersFragment)
-        }
-        uploadCoverButton.setOnClickListener { showImageSourceDialog() }
-        deleteBookButton.setOnClickListener { Toast.makeText(requireContext(), "Delete clicked", Toast.LENGTH_SHORT).show() }
+        binding.backArrow.setOnClickListener { findNavController().navigateUp() }
+        binding.uploadCoverButton.setOnClickListener { showImageSourceDialog() }
+        binding.deleteBookButton.setOnClickListener { deleteBook() }
 
-        setupExpandableRow(titleRow, titleEditContainer, titleArrow)
-        setupExpandableRow(languageRow, languageOptionsContainer, languageArrow)
-        // ... setup other expandable rows ...
+        // Expanded rows setup
+        setupExpandableRow(binding.titleRow, binding.titleEditContainer, binding.titleArrow)
+        setupExpandableRow(binding.languageRow, binding.languageOptionsContainer, binding.languageArrow)
+        setupExpandableRow(binding.typeRow, binding.typeOptionsContainer, binding.typeArrow)
+        setupExpandableRow(binding.genreRow, binding.genreOptionsContainer, binding.genreArrow)
+        setupExpandableRow(binding.synopsisRow, binding.synopsisEditContainer, binding.synopsisArrow)
+        setupExpandableRow(binding.tagsRow, binding.tagsEditContainer, binding.tagsArrow)
+        setupExpandableRow(binding.warningNoticeRow, binding.warningNoticeOptionsContainer, binding.warningNoticeArrow)
+        setupExpandableRow(binding.lengthRow, binding.lengthOptionsContainer, binding.lengthArrow)
+
+        // Options listeners for selection
+        binding.optionAmericanEnglish.setOnClickListener {
+            selectOption(binding.languageValue, binding.languageOptionsContainer, binding.languageArrow, binding.optionAmericanEnglish.text.toString())
+            selectedLanguage = binding.optionAmericanEnglish.text.toString()
+        }
+        binding.optionUkEnglish.setOnClickListener {
+            selectOption(binding.languageValue, binding.languageOptionsContainer, binding.languageArrow, binding.optionUkEnglish.text.toString())
+            selectedLanguage = binding.optionUkEnglish.text.toString()
+        }
+        binding.optionFanFiction.setOnClickListener {
+            selectOption(binding.typeValue, binding.typeOptionsContainer, binding.typeArrow, binding.optionFanFiction.text.toString())
+            selectedBookType = binding.optionFanFiction.text.toString()
+        }
+        binding.optionNovels.setOnClickListener {
+            selectOption(binding.typeValue, binding.typeOptionsContainer, binding.typeArrow, binding.optionNovels.text.toString())
+            selectedBookType = binding.optionNovels.text.toString()
+        }
+        binding.optionShortStory.setOnClickListener {
+            selectOption(binding.typeValue, binding.typeOptionsContainer, binding.typeArrow, binding.optionShortStory.text.toString())
+            selectedBookType = binding.optionShortStory.text.toString()
+        }
+        binding.optionRomance.setOnClickListener {
+            selectOption(binding.genreValue, binding.genreOptionsContainer, binding.genreArrow, binding.optionRomance.text.toString())
+            selectedGenre = binding.optionRomance.text.toString()
+        }
+        binding.optionMystery.setOnClickListener {
+            selectOption(binding.genreValue, binding.genreOptionsContainer, binding.genreArrow, binding.optionMystery.text.toString())
+            selectedGenre = binding.optionMystery.text.toString()
+        }
+        binding.optionFantasy.setOnClickListener {
+            selectOption(binding.genreValue, binding.genreOptionsContainer, binding.genreArrow, binding.optionFantasy.text.toString())
+            selectedGenre = binding.optionFantasy.text.toString()
+        }
+        binding.optionScienceFiction.setOnClickListener {
+            selectOption(binding.genreValue, binding.genreOptionsContainer, binding.genreArrow, binding.optionScienceFiction.text.toString())
+            selectedGenre = binding.optionScienceFiction.text.toString()
+        }
+        binding.optionThriller.setOnClickListener {
+            selectOption(binding.genreValue, binding.genreOptionsContainer, binding.genreArrow, binding.optionThriller.text.toString())
+            selectedGenre = binding.optionThriller.text.toString()
+        }
+        binding.optionHistoricalFiction.setOnClickListener {
+            selectOption(binding.genreValue, binding.genreOptionsContainer, binding.genreArrow, binding.optionHistoricalFiction.text.toString())
+            selectedGenre = binding.optionHistoricalFiction.text.toString()
+        }
+        binding.optionNoWarning.setOnClickListener {
+            selectOption(binding.warningNoticeValue, binding.warningNoticeOptionsContainer, binding.warningNoticeArrow, binding.optionNoWarning.text.toString())
+            selectedWarning = binding.optionNoWarning.text.toString()
+        }
+        binding.optionMatureContent.setOnClickListener {
+            selectOption(binding.warningNoticeValue, binding.warningNoticeOptionsContainer, binding.warningNoticeArrow, binding.optionMatureContent.text.toString())
+            selectedWarning = binding.optionMatureContent.text.toString()
+        }
+        binding.optionGraphicViolence.setOnClickListener {
+            selectOption(binding.warningNoticeValue, binding.warningNoticeOptionsContainer, binding.warningNoticeArrow, binding.optionGraphicViolence.text.toString())
+            selectedWarning = binding.optionGraphicViolence.text.toString()
+        }
+        binding.optionShortLength.setOnClickListener {
+            selectOption(binding.lengthValue, binding.lengthOptionsContainer, binding.lengthArrow, binding.optionShortLength.text.toString())
+            selectedLength = binding.optionShortLength.text.toString()
+        }
+        binding.optionMediumLength.setOnClickListener {
+            selectOption(binding.lengthValue, binding.lengthOptionsContainer, binding.lengthArrow, binding.optionMediumLength.text.toString())
+            selectedLength = binding.optionMediumLength.text.toString()
+        }
+        binding.optionLongLength.setOnClickListener {
+            selectOption(binding.lengthValue, binding.lengthOptionsContainer, binding.lengthArrow, binding.optionLongLength.text.toString())
+            selectedLength = binding.optionLongLength.text.toString()
+        }
+
+
+        // The main button to save all changes and navigate
+        binding.createChapterButton.setOnClickListener {
+            updateBookDetailsAndNavigate()
+        }
     }
 
     private fun setupTextWatchers() {
-        titleEditText.addTextChangedListener(object : TextWatcher {
+        binding.titleEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                bookTitleValue.text = s.toString().ifEmpty { "Edit Title" }
-                topBarBookTitle.text = s.toString().ifEmpty { "Edit Book Details" }
+                binding.bookTitleValue.text = s.toString().ifEmpty { "Edit Title" }
+                binding.topBarBookTitle.text = s.toString().ifEmpty { "Edit Book Details" }
             }
             override fun afterTextChanged(s: Editable?) {}
         })
-        // ... setup other text watchers ...
+
+        binding.synopsisEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.synopsisValue.text = s.toString().ifEmpty { "Write a synopsis" }
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        binding.tagsEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.tagsValue.text = s.toString().ifEmpty { "Add tags" }
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    /**
+     * Gathers all user input and updates the book document in Firestore.
+     */
+    private fun updateBookDetailsAndNavigate() {
+        val updates = hashMapOf<String, Any>()
+
+        updates["title"] = binding.titleEditText.text.toString()
+        updates["language"] = selectedLanguage ?: ""
+        updates["bookType"] = selectedBookType ?: ""
+        updates["genre"] = selectedGenre ?: ""
+        updates["synopsis"] = binding.synopsisEditText.text.toString()
+        updates["tags"] = binding.tagsEditText.text.toString().split(",").map { it.trim() }
+        updates["warningNotice"] = selectedWarning ?: ""
+        updates["length"] = selectedLength ?: ""
+        updates["pdfUrl"] = pdfUrl ?: "" // Add the pdfUrl to the updates
+        updates["lastUpdated"] = Date()
+
+        // Check if there is an existing cover image URL, if not then upload the default image
+        if (existingCoverImageUrl.isNullOrEmpty()) {
+            updates["coverImageUrl"] = "https://placehold.co/96x128/000000/FFFFFF?text=BookCover"
+        }
+
+        // Update Firestore document
+        firestore.collection("uploaded books").document(novelId).update(updates)
+            .addOnSuccessListener {
+                Log.d("EditBookDetails", "Book details updated successfully.")
+                Toast.makeText(requireContext(), "Book details saved!", Toast.LENGTH_SHORT).show()
+
+                // Check for PDF URL to decide navigation
+                if (!pdfUrl.isNullOrEmpty()) {
+                    val action = EditBookDetailsFragmentDirections.actionEditBookDetailsFragmentToYourWorksFragment()
+                    findNavController().navigate(action)
+                } else {
+                    val action = EditBookDetailsFragmentDirections.actionEditBookDetailsFragmentToWriteChaptersFragment(novelId)
+                    findNavController().navigate(action)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("EditBookDetails", "Error updating book details", e)
+                Toast.makeText(requireContext(), "Error saving details: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun deleteBook() {
+        // Show a confirmation dialog before deleting
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Book")
+            .setMessage("Are you sure you want to delete this book? This action cannot be undone.")
+            .setPositiveButton("Delete") { _, _ ->
+                performDelete()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun performDelete() {
+        // Delete the Firestore document
+        firestore.collection("uploaded books").document(novelId).delete()
+            .addOnSuccessListener {
+                Log.d("EditBookDetails", "Firestore document deleted successfully.")
+                // Now attempt to delete the files from Storage
+                deleteFilesFromStorage()
+                Toast.makeText(requireContext(), "Book deleted successfully.", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_editBookDetailsFragment_to_yourWorksFragment)
+            }
+            .addOnFailureListener { e ->
+                Log.e("EditBookDetails", "Error deleting Firestore document", e)
+                Toast.makeText(requireContext(), "Error deleting book.", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun deleteFilesFromStorage() {
+        val filesToDelete = ArrayList<String>()
+        existingCoverImageUrl?.let { filesToDelete.add(it) }
+        pdfUrl?.let { filesToDelete.add(it) }
+
+        if (filesToDelete.isEmpty()) {
+            return
+        }
+
+        filesToDelete.forEach { fileUrl ->
+            try {
+                // Get a reference from the URL
+                val fileRef = storage.getReferenceFromUrl(fileUrl)
+                fileRef.delete()
+                    .addOnSuccessListener {
+                        Log.d("EditBookDetails", "File deleted from Storage: $fileUrl")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w("EditBookDetails", "Error deleting file from Storage: $fileUrl", e)
+                    }
+            } catch (e: Exception) {
+                Log.w("EditBookDetails", "Invalid URL format for Firebase Storage: $fileUrl", e)
+            }
+        }
+    }
+
+    private fun uploadCoverImage(imageUri: Uri) {
+        // Show loading indicator or toast
+        Toast.makeText(requireContext(), "Uploading cover image...", Toast.LENGTH_SHORT).show()
+
+        // Create a unique filename for the image
+        val filename = UUID.randomUUID().toString() + ".jpg"
+
+        // Create a storage reference
+        val imageRef = storage.reference.child("book_covers/$novelId/$filename")
+
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                // Get the download URL after a successful upload
+                imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    val imageUrl = downloadUrl.toString()
+                    // Update Firestore with the new image URL
+                    firestore.collection("uploaded books").document(novelId)
+                        .update("coverImageUrl", imageUrl)
+                        .addOnSuccessListener {
+                            existingCoverImageUrl = imageUrl // Update local variable
+                            Glide.with(this).load(imageUrl).into(binding.bookCoverImageView)
+                            Toast.makeText(requireContext(), "Cover image updated!", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("EditBookDetails", "Error updating cover image URL in Firestore", e)
+                            Toast.makeText(requireContext(), "Error updating image URL.", Toast.LENGTH_LONG).show()
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("EditBookDetails", "Cover image upload failed", e)
+                Toast.makeText(requireContext(), "Image upload failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun showImageSourceDialog() {

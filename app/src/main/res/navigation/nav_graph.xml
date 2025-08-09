@@ -142,9 +142,16 @@
         android:name="com.example.novelonline.fragments.UploadPdfFragment"
         android:label="Upload pdf"
         tools:layout="@layout/fragment_upload_pdf">
+        <argument
+            android:name="novelId"
+            app:argType="string"
+            android:defaultValue="null" />
         <action
-            android:id="@+id/action_UploadPdfFragment_to_CompleteBookDetailsFragment"
-            app:destination="@id/editBookDetailFragment"/>
+            android:id="@+id/action_uploadPdfFragment_to_editBookDetailsFragment"
+            app:destination="@id/editBookDetailFragment">
+            <argument android:name="novelId" app:argType="string" />
+            <argument android:name="pdfUrl" app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -186,9 +193,22 @@
         android:name="com.example.novelonline.fragments.EditBookDetailsFragment"
         android:label="Complete Book Information"
         tools:layout="@layout/fragment_edit_book_details" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
+        <argument
+            android:name="pdfUrl"
+            app:argType="string" />
         <action
-            android:id="@+id/action_editBookDetailFragment_to_writeChaptersFragment"
-            app:destination="@id/writeChaptersFragment"/>
+            android:id="@+id/action_editBookDetailsFragment_to_writeChaptersFragment"
+            app:destination="@id/writeChaptersFragment">
+        <argument
+            android:name="novelId"
+            app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_editBookDetailsFragment_to_yourWorksFragment"
+            app:destination="@id/yourWorksFragment"/>
     </fragment>
 
     <fragment

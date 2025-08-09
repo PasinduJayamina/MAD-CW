@@ -59,6 +59,20 @@
         app:icon="@drawable/ic_upload"
         app:iconPadding="8dp" />
 
+    <TextView
+        android:id="@+id/pdfStatusText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="No PDF selected."
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        app:layout_constraintTop_toBottomOf="@id/upload_pdf_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Complete Book Info button -->
     <Button
         android:id="@+id/complete_book_info_button"
@@ -66,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Complete Book Info"
+        android:text="Edit Book Info"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
