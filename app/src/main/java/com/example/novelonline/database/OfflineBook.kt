@@ -14,13 +14,13 @@ data class OfflineBook(
     val localFilePath: String // The path to the downloaded PDF file
 )
 
-// A function to easily convert a online book to an offline book
+// A function to easily convert an online book to an offline book
 fun Book.toOfflineBook(localFilePath: String): OfflineBook {
     return OfflineBook(
         bookId = this.id,
-        title = this.title,
-        author = this.author,
-        coverImageUrl = this.coverImageUrl,
+        title = this.title, // 'title' is already non-nullable
+        author = this.author, // 'author' is already non-nullable
+        coverImageUrl = this.coverImageUrl ?: "", // Handle nullable 'coverImageUrl'
         localFilePath = localFilePath
     )
 }
