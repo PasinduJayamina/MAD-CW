@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="100dp">
 
-        <!-- Back Arrow -->
         <ImageView
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
@@ -24,7 +23,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Cover Image -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/coverImageView"
             android:layout_width="130dp"
@@ -37,7 +35,6 @@
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
             tools:src="@tools:sample/backgrounds/scenic" />
 
-        <!-- Title -->
         <TextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
@@ -51,7 +48,6 @@
             app:layout_constraintTop_toBottomOf="@id/coverImageView"
             tools:text="A New India" />
 
-        <!-- Author -->
         <TextView
             android:id="@+id/authorTextView"
             android:layout_width="wrap_content"
@@ -64,7 +60,6 @@
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
             tools:text="By clautic >" />
 
-        <!-- Tags -->
         <LinearLayout
             android:id="@+id/tagsLayout"
             android:layout_width="wrap_content"
@@ -99,7 +94,6 @@
                 android:textColor="@color/novel_text_secondary" />
         </LinearLayout>
 
-        <!-- Stats Card -->
         <LinearLayout
             android:id="@+id/statsCard"
             android:layout_width="0dp"
@@ -186,7 +180,19 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Reviews Section -->
+        <TextView
+            android:id="@+id/synopsisTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/novel_text_secondary"
+            android:lineSpacingExtra="4dp"
+            app:layout_constraintTop_toBottomOf="@id/statsCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="This is a long description of the novel's synopsis, detailing the plot, characters, and the main conflict of the story to entice the reader."/>
+
         <TextView
             android:id="@+id/reviewsTitle"
             android:layout_width="wrap_content"
@@ -198,20 +204,17 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/statsCard" />
+            app:layout_constraintTop_toBottomOf="@id/synopsisTextView" /> <TextView
+        android:id="@+id/reviewsCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/novel_text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/reviewsTitle"
+        app:layout_constraintStart_toEndOf="@id/reviewsTitle"
+        tools:text="20" />
 
-        <TextView
-            android:id="@+id/reviewsCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/novel_text_secondary"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@id/reviewsTitle"
-            app:layout_constraintStart_toEndOf="@id/reviewsTitle"
-            tools:text="20" />
-
-        <!-- Review Card (This would be in a RecyclerView in a real app) -->
         <LinearLayout
             android:id="@+id/reviewCard"
             android:layout_width="0dp"
@@ -263,7 +266,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Action Buttons -->
         <LinearLayout
             android:id="@+id/actionButtonsLayout"
             android:layout_width="0dp"
@@ -314,6 +316,17 @@
                 app:iconTint="@color/novel_button_text" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/detailsProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

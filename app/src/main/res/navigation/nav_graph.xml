@@ -5,7 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
-    <!-- Login/Sign Up Flow -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.novelonline.ui.LoginFragment"
@@ -27,15 +26,14 @@
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
 
-    <!-- Main App Fragments -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.novelonline.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_genreDetailFragment"
-            app:destination="@id/genreDetailFragment" />
+            android:id="@+id/action_homeFragment_to_NovelDetailsFragment"
+            app:destination="@id/NovelDetails" />
     </fragment>
 
     <fragment
@@ -46,10 +44,7 @@
         <action
             android:id="@+id/action_exploreFragment_to_genreDetailFragment"
             app:destination="@id/genreDetailFragment" />
-
     </fragment>
-
-
 
     <fragment
         android:id="@+id/libraryFragment"
@@ -57,8 +52,6 @@
         android:label="fragment_library"
         tools:layout="@layout/fragment_home" />
 
-
-    <!-- reader Feature Fragments -->
     <fragment
         android:id="@+id/ReaderDashboardFragment"
         android:name="com.example.novelonline.fragments.ReaderDashboardFragment"
@@ -76,18 +69,20 @@
     </fragment>
 
     <fragment
-        android:id="@+id/readChaptersFragment"
+        android:id="@+id/readChapterFragment"
         android:name="com.example.novelonline.fragments.ReadChapterFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_read_chapter" >
+        android:label="fragment_read_chapter"
+        tools:layout="@layout/fragment_read_chapter">
+        <argument
+            android:name="pdfUrl"
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/bookFairsFragment"
         android:name="com.example.novelonline.fragments.BookFairsFragment"
         android:label="Bok Fairs"
-        tools:layout="@layout/fragment_book_fairs" >
-    </fragment>
+        tools:layout="@layout/fragment_book_fairs" />
 
     <fragment
         android:id="@+id/genreDetailFragment"
@@ -107,6 +102,9 @@
         android:name="com.example.novelonline.fragments.ReviewsFragment"
         android:label="fragment_reviews"
         tools:layout="@layout/fragment_reviews" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -114,16 +112,17 @@
         android:name="com.example.novelonline.fragments.NovelDetailsFragment"
         android:label="Novel Details"
         tools:layout="@layout/fragment_novel_details" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
         <action
             android:id="@+id/action_NovelDetails_to_readChaptersFragment"
-            app:destination="@id/readChaptersFragment" />
+            app:destination="@id/readChapterFragment" />
         <action
             android:id="@+id/action_NovelDetails_to_ReviewFragment"
             app:destination="@id/ReviewFragment" />
-
     </fragment>
 
-    <!-- Writer Feature Fragments -->
     <fragment
         android:id="@+id/becomeWriterFragment"
         android:name="com.example.novelonline.fragments.BecomeWriterFragment"

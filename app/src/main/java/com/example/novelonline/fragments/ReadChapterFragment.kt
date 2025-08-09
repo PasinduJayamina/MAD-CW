@@ -1,46 +1,30 @@
-package com.example.novelonline.fragments // Adjust package as needed
+package com.example.novelonline.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.novelonline.R
 import com.example.novelonline.databinding.FragmentReadChapterBinding
-import com.google.android.material.color.MaterialColors
+import com.github.barteksc.pdfviewer.PDFView
+import java.io.InputStream
+import java.net.URL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ReadChapterFragment : Fragment() {
 
-    // Use a nullable binding to prevent memory leaks,
-    // and a non-null accessor for convenience.
     private var _binding: FragmentReadChapterBinding? = null
     private val binding get() = _binding!!
-
-    // Properties to hold the novel and chapter IDs
-    private var novelId: String? = null
-    private var chapterId: String? = null
-
-    // Use `sp` for font size to respect user settings, and manage it as a float.
-    // The default font size should be a reasonable starting point.
-    private var currentFontSizeSp: Float = 18f
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Retrieve the arguments, which is the correct place for this.
-        arguments?.let {
-            novelId = it.getString(ARG_NOVEL_ID)
-            chapterId = it.getString(ARG_CHAPTER_ID)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout using View Binding.
         _binding = FragmentReadChapterBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -48,127 +32,48 @@ class ReadChapterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupClickListeners()
-        // It's good to call this from onViewCreated to ensure the view is ready.
-        // TODO: fetchChapterContent(novelId, chapterId)
-    }
-
-    private fun setupClickListeners() {
-        // Back button to navigate back. The ID is correctly referenced.
-        binding.toolbar.findViewById<View>(R.id.backButton).setOnClickListener {
+        binding.backArrow.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        // Settings button to show/hide the settings panel.
-        binding.settingsButton.setOnClickListener {
-            toggleSettingsPanelVisibility()
-        }
+        val pdfUrl = arguments?.getString("pdfUrl")
 
-        // Font size controls
-        binding.increaseFontButton.setOnClickListener {
-            // Check for a reasonable upper limit for the font size.
-            if (currentFontSizeSp < 32f) {
-                currentFontSizeSp += 2f
-                binding.contentTextView.textSize = currentFontSizeSp
+        if (pdfUrl != null) {
+            binding.bookTitleTextView.text = "Reading Chapter"
+
+            // Use a coroutine to handle the network operation
+            lifecycleScope.launch {
+                try {
+                    Toast.makeText(requireContext(), "Downloading PDF...", Toast.LENGTH_SHORT).show()
+
+                    // Download the PDF into a ByteArray on a background thread
+                    val pdfBytes = withContext(Dispatchers.IO) {
+                        URL(pdfUrl).readBytes()
+                    }
+
+                    // Load the PDF from the ByteArray into the view on the main thread
+                    binding.pdfView.fromBytes(pdfBytes)
+                        .onLoad { pageCount ->
+                            Toast.makeText(requireContext(), "PDF Loaded, page count: $pageCount", Toast.LENGTH_SHORT).show()
+                        }
+                        .onError { t ->
+                            Toast.makeText(requireContext(), "Error loading PDF: ${t.message}", Toast.LENGTH_LONG).show()
+                        }
+                        .load()
+
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Failed to download PDF: ${e.message}", Toast.LENGTH_LONG).show()
+                    e.printStackTrace()
+                }
             }
-        }
-
-        binding.decreaseFontButton.setOnClickListener {
-            // Check for a reasonable lower limit for the font size.
-            if (currentFontSizeSp > 12f) {
-                currentFontSizeSp -= 2f
-                binding.contentTextView.textSize = currentFontSizeSp
-            }
-        }
-
-        // Theme controls
-        binding.lightModeButton.setOnClickListener {
-            setTheme(isDarkMode = false)
-        }
-
-        binding.darkModeButton.setOnClickListener {
-            setTheme(isDarkMode = true)
-        }
-    }
-
-    private fun toggleSettingsPanelVisibility() {
-        // Using `View.VISIBLE` and `View.GONE` is correct.
-        if (binding.settingsPanel.visibility == View.GONE) {
-            binding.settingsPanel.visibility = View.VISIBLE
         } else {
-            binding.settingsPanel.visibility = View.GONE
+            Toast.makeText(requireContext(), "Book not found: PDF URL is missing", Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack()
         }
-    }
-
-    private fun setTheme(isDarkMode: Boolean) {
-        if (isDarkMode) {
-            // Set dark theme colors by referencing R.color
-            binding.readerContainer.setBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.reader_dark_bg)
-            )
-            binding.contentTextView.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.reader_dark_text)
-            )
-            binding.chapterTitleTextView.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.reader_dark_text)
-            )
-            binding.backButton.setColorFilter(
-                ContextCompat.getColor(requireContext(), R.color.reader_dark_text),
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
-            binding.settingsButton.setColorFilter(
-                ContextCompat.getColor(requireContext(), R.color.reader_dark_text),
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
-            binding.settingsPanel.setBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.reader_dark_panel_bg)
-            )
-        } else {
-            // Set light theme colors by referencing R.color
-            binding.readerContainer.setBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.reader_light_bg)
-            )
-            binding.contentTextView.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.reader_light_text)
-            )
-            binding.chapterTitleTextView.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.reader_light_text)
-            )
-            binding.backButton.setColorFilter(
-                ContextCompat.getColor(requireContext(), R.color.reader_light_text),
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
-            binding.settingsButton.setColorFilter(
-                ContextCompat.getColor(requireContext(), R.color.reader_light_text),
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
-            binding.settingsPanel.setBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.reader_panel_bg)
-            )
-        }
-    }
-
-    private fun fetchChapterContent(novelId: String?, chapterId: String?) {
-        if (novelId == null || chapterId == null) {
-            // It's good practice to handle the case where arguments are missing.
-            // You might want to show an error message or navigate back.
-            return
-        }
-
-        // TODO: Implement logic to fetch chapter content from a repository or database (e.g., Firebase)
-        // For demonstration purposes, we will set placeholder text
-        binding.chapterTitleTextView.text = "Chapter 1: The Beginning"
-        binding.contentTextView.text = getString(R.string.placeholder_chapter_content)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // This is crucial to prevent memory leaks.
         _binding = null
-    }
-
-    companion object {
-        const val ARG_NOVEL_ID = "novelId"
-        const val ARG_CHAPTER_ID = "chapterId"
     }
 }
