@@ -6,8 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.novelonline.adapters.BookAdapter
 import com.example.novelonline.databinding.FragmentHomeBinding
+import com.example.novelonline.repository.BookRepository
+import kotlinx.coroutines.launch
+import androidx.navigation.fragment.findNavController
 import com.example.novelonline.models.Book
 
 class HomeFragment : Fragment() {
@@ -30,42 +34,44 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerViews()
-        loadData()
+        loadBooksData()
     }
 
     private fun setupRecyclerViews() {
-        // Adapter for the horizontal featured books list
-        featuredBooksAdapter = BookAdapter(BookAdapter.VIEW_TYPE_HORIZONTAL) { book ->
-            // TODO: Navigate to book detail screen (Task for member GAHDSE242F-012)
-            Toast.makeText(context, "Clicked on ${book.title}", Toast.LENGTH_SHORT).show()
+        // 1. Define the click listener logic once to avoid repeating code.
+        val onBookClick: (Book) -> Unit = { book ->
+            // 2. Get the book's ID from your Book data model.
+            val novelId = book.id
+
+            // 3. Create the navigation action using the generated Directions class.
+            val action = HomeFragmentDirections.actionHomeFragmentToNovelDetailsFragment(novelId)
+
+            // 4. Use the NavController to perform the navigation.
+            findNavController().navigate(action)
         }
+
+        // 5. Pass the same click listener to both of your adapters.
+        featuredBooksAdapter = BookAdapter(BookAdapter.VIEW_TYPE_HORIZONTAL, onBookClick)
         binding.rvFeaturedBooks.adapter = featuredBooksAdapter
 
-        // Adapter for the vertical top-ranked books list
-        topRankedAdapter = BookAdapter(BookAdapter.VIEW_TYPE_VERTICAL) { book ->
-            // TODO: Navigate to book detail screen (Task for member GAHDSE242F-012)
-            Toast.makeText(context, "Clicked on ${book.title}", Toast.LENGTH_SHORT).show()
-        }
+        topRankedAdapter = BookAdapter(BookAdapter.VIEW_TYPE_VERTICAL, onBookClick)
         binding.rvTopRankedBooks.adapter = topRankedAdapter
     }
 
-    private fun loadData() {
-        // TODO: Replace this with your actual data fetching logic from Firestore.
-        // This is placeholder data to make the UI work.
-        val sampleFeaturedBooks = listOf(
-            Book("1", "The Dragon's Ascent", "Amelia Stone", "https://placehold.co/300x400/1e293b/ffffff?text=FALARY"),
-            Book("2", "Eternal Embrace", "Ethan Blackwood", "https://placehold.co/300x400/d1d5db/1f2937?text=Eternal"),
-            Book("3", "Echoes of Tomorrow", "Olivia Reed", "https://placehold.co/300x400/0ea5e9/ffffff?text=SCI-FI")
-        )
-        featuredBooksAdapter.submitList(sampleFeaturedBooks)
+    private fun loadBooksData() {
+        binding.homeProgressBar.visibility = View.VISIBLE
 
-        val sampleTopRankedBooks = listOf(
-            Book("1", "The Dragon's Ascent", "By Amelia Stone", "https://placehold.co/160x240/1e293b/ffffff?text=FANTASY"),
-            Book("2", "Eternal Embrace", "By Ethan Blackwood", "https://placehold.co/160x240/d1d5db/1f2937?text=ROMANCE"),
-            Book("3", "Echoes of Tomorrow", "By Olivia Reed", "https://placehold.co/160x240/0ea5e9/ffffff?text=SCI-FI"),
-            Book("4", "Whispers of the Void", "By Leo Vance", "https://placehold.co/160x240/4f46e5/ffffff?text=MYSTERY")
-        )
-        topRankedAdapter.submitList(sampleTopRankedBooks)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val books = BookRepository.getBooks()
+            binding.homeProgressBar.visibility = View.GONE
+
+            if (isAdded && books.isNotEmpty()) {
+                featuredBooksAdapter.submitList(books)
+                topRankedAdapter.submitList(books)
+            } else if (isAdded) {
+                Toast.makeText(context, "Failed to load books.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroyView() {

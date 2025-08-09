@@ -4,29 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast // Import Toast for user feedback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.novelonline.databinding.FragmentNovelDetailsBinding
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.example.novelonline.R
+import com.example.novelonline.databinding.FragmentNovelDetailsBinding
+import com.example.novelonline.models.Book
+import com.example.novelonline.repository.BookRepository
+import kotlinx.coroutines.launch
 
 class NovelDetailsFragment : Fragment() {
 
     private var _binding: FragmentNovelDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private var novelId: String? = null
+    private val args: NovelDetailsFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Retrieve the novelId from arguments
-        arguments?.let {
-            novelId = it.getString(ARG_NOVEL_ID)
-        }
-    }
+    // 1. (CHANGED) Add a variable to hold the currently displayed book.
+    private var currentBook: Book? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,76 +37,70 @@ class NovelDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set up click listener for the back button
+        val novelId = args.novelId
+        fetchNovelDetails(novelId)
+
+        // This function now relies on the `currentBook` variable
+        setupNavigation(novelId)
+    }
+
+    private fun setupNavigation(novelId: String) {
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        // Set up click listener for the Read Now button
+        // 2. (CHANGED) Update the click listener to use the real data.
         binding.readNowButton.setOnClickListener {
-            // TODO: Navigate to the reading screen, passing the novel ID
-            // Example:
-            // val action = NovelDetailsFragmentDirections.actionNovelDetailsFragmentToReadingFragment(novelId)
-            // findNavController().navigate(action)
+            // Use the pdfUrl from the 'currentBook' object
+            currentBook?.pdfUrl?.let { pdfUrl ->
+                if (pdfUrl.isNotEmpty()) {
+                    val action = NovelDetailsFragmentDirections.actionNovelDetailsToReadChaptersFragment(pdfUrl)
+                    findNavController().navigate(action)
+                } else {
+                    // Handle case where the book might not have a PDF
+                    Toast.makeText(context, "No readable file found for this book.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
-        // Set up click listener for the Reviews section (e.g., the title)
         binding.reviewsTitle.setOnClickListener {
-            // TODO: Navigate to the ReviewsFragment, passing the novel ID
-            // Example:
-            // val action = NovelDetailsFragmentDirections.actionNovelDetailsFragmentToReviewsFragment(novelId)
-            // findNavController().navigate(action)
+            val action = NovelDetailsFragmentDirections.actionNovelDetailsToReviewFragment(novelId)
+            findNavController().navigate(action)
         }
-
-        // TODO: Implement logic to load novel details based on novelId
-        // fetchNovelDetails(novelId)
     }
 
-    // Example function to load novel details (you would replace this with your actual data fetching logic)
-    private fun fetchNovelDetails(id: String?) {
-        if (id == null) return
+    private fun fetchNovelDetails(id: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            binding.detailsProgressBar.visibility = View.VISIBLE
 
-        // TODO: Fetch novel data from a repository or database (e.g., Firebase)
-        // For demonstration, we'll use placeholder data
-        val novelTitle = "A New India"
-        val authorName = "clautic"
-        val coverImageUrl = "https://example.com/novel_cover.jpg" // Replace with a real URL
-        val globalRank = 3
-        val views = "1.2 M"
+            val book = BookRepository.getBookById(id)
 
-        // Update UI with the fetched data
-        binding.titleTextView.text = novelTitle
-        binding.authorTextView.text = "By $authorName >"
-        binding.rankTextView.text = globalRank.toString()
-        binding.viewsTextView.text = views
+            binding.detailsProgressBar.visibility = View.GONE
 
-        // Use Glide to load the cover image
-        // Make sure to add the Glide dependency to your build.gradle file
+            if (book != null) {
+                // 3. (CHANGED) Store the fetched book in our class variable.
+                currentBook = book
+                updateUi(book)
+            } else {
+                Toast.makeText(context, "Could not find book details.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateUi(book: Book) {
+        binding.titleTextView.text = book.title
+        binding.authorTextView.text = "By ${book.author} >"
+        binding.synopsisTextView.text = book.synopsis
+
         Glide.with(this)
-            .load(coverImageUrl)
-            .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(16)))
-            .placeholder(R.drawable.baseline_book_placeholder_24) // Add a placeholder
-            .error(R.drawable.baseline_error_outline_24) // Add an error drawable
+            .load(book.coverImageUrl)
+            .placeholder(R.drawable.baseline_book_placeholder_24)
+            .error(R.drawable.baseline_error_outline_24)
             .into(binding.coverImageView)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        const val ARG_NOVEL_ID = "novelId"
-
-        // Factory method to create a new instance of this fragment
-        fun newInstance(novelId: String): NovelDetailsFragment {
-            val fragment = NovelDetailsFragment()
-            val args = Bundle().apply {
-                putString(ARG_NOVEL_ID, novelId)
-            }
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

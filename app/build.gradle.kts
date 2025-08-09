@@ -71,6 +71,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
 
     implementation(libs.glide)
     implementation(libs.androidx.recyclerview)
