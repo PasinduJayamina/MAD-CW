@@ -105,7 +105,8 @@ class EditBookDetailsFragment : Fragment() {
     }
 
     private fun loadBookDetails(bookId: String) {
-        val bookRef = firestore.collection("uploaded books").document(bookId)
+        // -- CHANGED: Load from the "books" collection
+        val bookRef = firestore.collection("books").document(bookId)
         bookRef.get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
@@ -297,8 +298,8 @@ class EditBookDetailsFragment : Fragment() {
             updates["coverImageUrl"] = "https://placehold.co/96x128/000000/FFFFFF?text=BookCover"
         }
 
-        // Update Firestore document
-        firestore.collection("uploaded books").document(novelId).update(updates)
+        // -- CHANGED: Update the book document in the "books" collection
+        firestore.collection("books").document(novelId).update(updates)
             .addOnSuccessListener {
                 Log.d("EditBookDetails", "Book details updated successfully.")
                 Toast.makeText(requireContext(), "Book details saved!", Toast.LENGTH_SHORT).show()
@@ -331,8 +332,8 @@ class EditBookDetailsFragment : Fragment() {
     }
 
     private fun performDelete() {
-        // Delete the Firestore document
-        firestore.collection("uploaded books").document(novelId).delete()
+        // -- CHANGED: Delete from the "books" collection
+        firestore.collection("books").document(novelId).delete()
             .addOnSuccessListener {
                 Log.d("EditBookDetails", "Firestore document deleted successfully.")
                 // Now attempt to delete the files from Storage
@@ -379,16 +380,16 @@ class EditBookDetailsFragment : Fragment() {
         // Create a unique filename for the image
         val filename = UUID.randomUUID().toString() + ".jpg"
 
-        // Create a storage reference
-        val imageRef = storage.reference.child("book_covers/$novelId/$filename")
+        // -- CHANGED: The storage path is now "books" for consistency
+        val imageRef = storage.reference.child("books/$novelId/$filename")
 
         imageRef.putFile(imageUri)
             .addOnSuccessListener {
                 // Get the download URL after a successful upload
                 imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                     val imageUrl = downloadUrl.toString()
-                    // Update Firestore with the new image URL
-                    firestore.collection("uploaded books").document(novelId)
+                    // -- CHANGED: Update Firestore in the "books" collection
+                    firestore.collection("books").document(novelId)
                         .update("coverImageUrl", imageUrl)
                         .addOnSuccessListener {
                             existingCoverImageUrl = imageUrl // Update local variable
