@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.novelonline.BuildConfig // <-- ADD THIS IMPORT
+import com.example.novelonline.BuildConfig
 import com.example.novelonline.adapters.BookFairsAdapter
 import com.example.novelonline.databinding.FragmentBookFairsBinding
 import com.example.novelonline.models.BookFair
@@ -29,13 +29,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-// --- Data classes for parsing the Directions API response ---
+//  Data classes for parsing the Directions API response
 data class DirectionsResponse(val routes: List<Route>)
 data class Route(val legs: List<Leg>)
 data class Leg(val distance: Distance)
 data class Distance(@SerializedName("text") val distanceText: String)
 
-// --- Retrofit interface for the Directions API ---
 interface DirectionsApiService {
     @GET("maps/api/directions/json")
     suspend fun getDirections(
@@ -53,7 +52,6 @@ class BookFairsFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var adapter: BookFairsAdapter
 
-    // This will now work correctly after rebuilding and adding the import
     private val GOOGLE_MAPS_API_KEY = BuildConfig.MAPS_API_KEY
 
     private val bookFairs = mutableListOf(
@@ -146,7 +144,6 @@ class BookFairsFragment : Fragment() {
                     val drivingDistance = getDrivingDistance(userLocation, fair)
                     if (drivingDistance != null) {
                         bookFairs[index].drivingDistance = drivingDistance
-                        // Update the specific item in the adapter for a smoother refresh
                         adapter.notifyItemChanged(index)
                     }
                 } catch (e: Exception) {

@@ -66,7 +66,6 @@ class GenreDetailFragment : Fragment() {
         binding.rvGenreBooks.visibility = View.GONE
 
         // Query Firestore for books where the 'genre' field is equal to the genreName.
-        // This assumes 'genre' is a single string field.
         firestore.collection("books")
             .whereEqualTo("genre", genreName)
             .get()

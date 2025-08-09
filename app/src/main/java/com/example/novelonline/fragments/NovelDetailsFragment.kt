@@ -1,4 +1,4 @@
-package com.example.novelonline.fragments // Adjust package as needed
+package com.example.novelonline.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

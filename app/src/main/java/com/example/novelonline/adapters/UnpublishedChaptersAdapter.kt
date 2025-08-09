@@ -1,4 +1,4 @@
-package com.example.novelonline.adapters // Adjust package as needed
+package com.example.novelonline.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.novelonline.R
-import com.example.novelonline.models.Chapter // Import your Chapter data class
+import com.example.novelonline.models.Chapter
 
 class UnpublishedChaptersAdapter(
     private val chapters: List<Chapter>,

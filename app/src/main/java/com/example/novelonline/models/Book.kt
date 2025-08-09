@@ -3,7 +3,7 @@ package com.example.novelonline.models
 import com.google.firebase.firestore.DocumentId
 import java.util.Date
 
-// UPDATED: Changed Date fields back to String for simplicity and to match fragment code.
+//  Changed Date fields back to String for simplicity and to match fragment code.
 data class Book(
     val id: String = "",
     val title: String = "",

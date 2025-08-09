@@ -105,7 +105,7 @@ class EditBookDetailsFragment : Fragment() {
     }
 
     private fun loadBookDetails(bookId: String) {
-        // -- CHANGED: Load from the "books" collection
+        // Load from the "books" collection
         val bookRef = firestore.collection("books").document(bookId)
         bookRef.get()
             .addOnSuccessListener { document ->
@@ -132,7 +132,7 @@ class EditBookDetailsFragment : Fragment() {
                         it.warningNotice?.let { selectedWarning = it; binding.warningNoticeValue.text = it }
                         it.length?.let { selectedLength = it; binding.lengthValue.text = it }
 
-                        // Store the cover image URL for potential deletion later
+                        // Store the cover image URL
                         existingCoverImageUrl = it.coverImageUrl
 
                         // Load cover image if it exists
@@ -276,9 +276,8 @@ class EditBookDetailsFragment : Fragment() {
         })
     }
 
-    /**
-     * Gathers all user input and updates the book document in Firestore.
-     */
+
+     // Gathers all user input and updates the book document in Firestore.
     private fun updateBookDetailsAndNavigate() {
         val updates = hashMapOf<String, Any>()
 
@@ -290,7 +289,7 @@ class EditBookDetailsFragment : Fragment() {
         updates["tags"] = binding.tagsEditText.text.toString().split(",").map { it.trim() }
         updates["warningNotice"] = selectedWarning ?: ""
         updates["length"] = selectedLength ?: ""
-        updates["pdfUrl"] = pdfUrl ?: "" // Add the pdfUrl to the updates
+        updates["pdfUrl"] = pdfUrl ?: ""
         updates["lastUpdated"] = Date()
 
         // Check if there is an existing cover image URL, if not then upload the default image
@@ -298,7 +297,7 @@ class EditBookDetailsFragment : Fragment() {
             updates["coverImageUrl"] = "https://placehold.co/96x128/000000/FFFFFF?text=BookCover"
         }
 
-        // -- CHANGED: Update the book document in the "books" collection
+        // Update the book document in the "books" collection
         firestore.collection("books").document(novelId).update(updates)
             .addOnSuccessListener {
                 Log.d("EditBookDetails", "Book details updated successfully.")
@@ -320,7 +319,7 @@ class EditBookDetailsFragment : Fragment() {
     }
 
     private fun deleteBook() {
-        // Show a confirmation dialog before deleting
+        // confirmation dialog before deleting
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Book")
             .setMessage("Are you sure you want to delete this book? This action cannot be undone.")
@@ -332,11 +331,11 @@ class EditBookDetailsFragment : Fragment() {
     }
 
     private fun performDelete() {
-        // -- CHANGED: Delete from the "books" collection
+        // Delete from the "books" collection
         firestore.collection("books").document(novelId).delete()
             .addOnSuccessListener {
                 Log.d("EditBookDetails", "Firestore document deleted successfully.")
-                // Now attempt to delete the files from Storage
+                // delete the files from Storage
                 deleteFilesFromStorage()
                 Toast.makeText(requireContext(), "Book deleted successfully.", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_editBookDetailsFragment_to_yourWorksFragment)
@@ -380,7 +379,7 @@ class EditBookDetailsFragment : Fragment() {
         // Create a unique filename for the image
         val filename = UUID.randomUUID().toString() + ".jpg"
 
-        // -- CHANGED: The storage path is now "books" for consistency
+        // The storage path is now "books" for consistency
         val imageRef = storage.reference.child("books/$novelId/$filename")
 
         imageRef.putFile(imageUri)
@@ -388,7 +387,7 @@ class EditBookDetailsFragment : Fragment() {
                 // Get the download URL after a successful upload
                 imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                     val imageUrl = downloadUrl.toString()
-                    // -- CHANGED: Update Firestore in the "books" collection
+                    // Update Firestore in the "books" collection
                     firestore.collection("books").document(novelId)
                         .update("coverImageUrl", imageUrl)
                         .addOnSuccessListener {

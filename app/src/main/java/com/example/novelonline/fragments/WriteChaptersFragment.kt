@@ -82,7 +82,6 @@ class WriteChaptersFragment : Fragment() {
         saveButton = binding.saveButton
         undoButton = binding.undoButton
         redoButton = binding.redoButton
-        // Note: The author's thoughts views have been removed.
 
         // --- Set up click listeners ---
         backArrow.setOnClickListener {
@@ -164,10 +163,6 @@ class WriteChaptersFragment : Fragment() {
         redoButton.isEnabled = redoStack.isNotEmpty()
     }
 
-    /**
-     * Toggles a StyleSpan on the selected text in the main text editor.
-     * @param style The style to toggle (e.g., Typeface.BOLD, Typeface.ITALIC).
-     */
     private fun toggleStyle(style: Int) {
         val editable = mainTextEditText.text
         val start = mainTextEditText.selectionStart
@@ -196,19 +191,15 @@ class WriteChaptersFragment : Fragment() {
         }
     }
 
-    /**
-     * Saves a new chapter to the Firestore database.
-     * It first queries the number of existing chapters for the book
-     * to determine the next chapter number.
-     *
-     * @param chapterTitle The title of the chapter.
-     * @param mainText The content of the chapter.
-     */
+     // Saves a new chapter to the Firestore database.
+     // It first queries the number of existing chapters for the book
+     // to determine the next chapter number.
+
     private fun saveChapterToFirestore(chapterTitle: String, mainText: String) {
         val novelDocRef = firestore.collection("books").document(novelId)
         val chaptersCollectionRef = novelDocRef.collection("chapters")
 
-        // First, get the count of existing chapters to determine the next number
+        // count of existing chapters to determine the next number
         chaptersCollectionRef.get()
             .addOnSuccessListener { querySnapshot ->
                 val nextChapterNumber = querySnapshot.size() + 1

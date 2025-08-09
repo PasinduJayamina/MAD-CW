@@ -57,7 +57,6 @@ class CompleteBookInfoFragment : Fragment() {
         // Retrieve the novelId from the arguments
         val args: CompleteBookInfoFragmentArgs by navArgs()
         novelId = args.novelId
-        // You can now use novelId to reference the document in Firestore
 
         // Back Arrow
         backArrow = view.findViewById(R.id.backArrow)
@@ -94,8 +93,6 @@ class CompleteBookInfoFragment : Fragment() {
         // Start Writing Button
         startWritingButton = view.findViewById(R.id.start_writing_button)
 
-
-        // --- Set up all click listeners and data ---
 
         // Set up the back button listener
         backArrow.setOnClickListener {
@@ -157,10 +154,7 @@ class CompleteBookInfoFragment : Fragment() {
             val selectedBookType = bookTypeText.text.toString()
             val selectedGenre = genreText.text.toString()
 
-            // You'll also need a way to handle multiple selected genres
-            // For now, let's assume one is selected.
-
-            // Now, you can update Firestore
+            // update Firestore
             updateNovelInFirestore(novelId, selectedLanguage, selectedBookType, selectedGenre)
             val action = CompleteBookInfoFragmentDirections.actionCompleteBookInfoFragmentToWriteChaptersFragment(novelId)
 
@@ -180,7 +174,7 @@ class CompleteBookInfoFragment : Fragment() {
         val updates = hashMapOf<String, Any>(
             "language" to language,
             "bookType" to bookType,
-            "genres" to listOf(genre), // Assuming one genre for now
+            "genres" to listOf(genre),
             "lastUpdated" to Date()
         )
 
@@ -195,9 +189,8 @@ class CompleteBookInfoFragment : Fragment() {
             }
     }
 
-    /**
-     * Toggles the visibility of an options container and animates its arrow.
-     */
+     // Toggles the visibility of an options container and animates its arrow.
+
     private fun toggleOptions(container: LinearLayout, arrow: TextView) {
         if (container.visibility == View.GONE) {
             container.visibility = View.VISIBLE
@@ -208,9 +201,9 @@ class CompleteBookInfoFragment : Fragment() {
         }
     }
 
-    /**
-     * Sets the selected option text, hides the options container, and animates the arrow back.
-     */
+
+     // Sets the selected option text, hides the options container, and animates the arrow back.
+
     private fun selectOption(textView: TextView, container: LinearLayout, arrow: TextView, selectedText: String) {
         textView.text = selectedText
         container.visibility = View.GONE

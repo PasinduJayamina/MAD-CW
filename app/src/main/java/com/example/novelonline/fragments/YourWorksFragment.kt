@@ -75,13 +75,13 @@ class YourWorksFragment : Fragment() {
         booksRecyclerView = binding.booksRecyclerView
         myBooksTitle = binding.myBooks
 
-        // --- Set up RecyclerView ---
+        //  Set up RecyclerView
         booksRecyclerView.layoutManager = LinearLayoutManager(context)
         booksAdapter = BooksAdapter(
             books,
             onItemClick = { book ->
                 val novelId = book.id
-                val pdfUrl = book.pdfUrl // Assume your 'Book' class has a 'pdfUrl' property
+                val pdfUrl = book.pdfUrl
 
                 // Use Safe Args to navigate and pass the arguments.
                 val action = YourWorksFragmentDirections.actionYourWorksFragmentToEditBookDetailFragment2(
@@ -101,10 +101,10 @@ class YourWorksFragment : Fragment() {
         )
         booksRecyclerView.adapter = booksAdapter
 
-        // --- Fetch data from Firestore ---
+        //  Fetch data from Firestore
         listenForBooks()
 
-        // --- Set up click listeners ---
+        //  Set up click listeners
         backArrow.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -114,10 +114,8 @@ class YourWorksFragment : Fragment() {
         }
     }
 
-    /**
-     * Listens for real-time changes to the user's books from both "books" and "uploaded books"
-     * Firestore collections and combines them into a single list.
-     */
+     //Listens for real-time changes to the user's books from both "books" and "uploaded books"
+     // Firestore collections and combines them into a single list
     private fun listenForBooks() {
         if (userId == null) return
 
@@ -133,7 +131,7 @@ class YourWorksFragment : Fragment() {
                 if (booksSnapshot != null) {
                     booksFromBooksCollection.clear()
                     for (doc in booksSnapshot.documents) {
-                        // --- CORRECTED: Use the document ID for the 'id' field ---
+                        // Use the document ID for the 'id' field ---
                         val book = doc.toObject(Book::class.java)?.copy(id = doc.id, sourceCollection = "books")
                         book?.let {
                             booksFromBooksCollection.add(it)
@@ -157,7 +155,7 @@ class YourWorksFragment : Fragment() {
                 if (uploadedBooksSnapshot != null) {
                     booksFromUploadedBooksCollection.clear()
                     for (doc in uploadedBooksSnapshot.documents) {
-                        // --- CORRECTED: Use the document ID for the 'id' field ---
+                        // Use the document ID for the 'id' field ---
                         val book = doc.toObject(Book::class.java)?.copy(id = doc.id, sourceCollection = "uploaded books")
                         book?.let {
                             booksFromUploadedBooksCollection.add(it)
@@ -174,7 +172,7 @@ class YourWorksFragment : Fragment() {
         books.clear()
         books.addAll(booksFromBooksCollection)
         books.addAll(booksFromUploadedBooksCollection)
-        // Sort the combined list by a relevant field, e.g., creation date
+        // Sort the combined list by a relevant field
         books.sortByDescending { it.createdOn }
         booksAdapter.notifyDataSetChanged()
     }

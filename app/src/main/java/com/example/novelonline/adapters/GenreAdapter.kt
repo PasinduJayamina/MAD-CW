@@ -16,7 +16,7 @@ class GenreAdapter(private val onGenreClicked: (Genre) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(genre: Genre) {
             binding.tvGenreName.text = genre.name
-            // Use Glide to load the genre icon
+            // Glide to load the genre icon
             Glide.with(itemView.context)
                 .load(genre.iconUrl)
                 .into(binding.ivGenreIcon)

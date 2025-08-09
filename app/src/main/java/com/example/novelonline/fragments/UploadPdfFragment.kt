@@ -132,7 +132,6 @@ class UploadPdfFragment : Fragment() {
 
         // Check if novelId is null. If so, create a new one.
         if (novelId == null) {
-            // -- CHANGED: New document is created in the "books" collection
             val newBookRef = firestore.collection("books").document()
             novelId = newBookRef.id
             // Save a placeholder to the new document, including the authorId
@@ -145,14 +144,12 @@ class UploadPdfFragment : Fragment() {
                     handleUploadError("Failed to create new novel ID.", e)
                 }
         } else {
-            // novelId already exists, proceed with the upload.
             performPdfUpload(pdfUri, novelId!!, userId)
         }
     }
 
     private fun performPdfUpload(pdfUri: Uri, novelId: String, userId: String) {
         val filename = UUID.randomUUID().toString() + ".pdf"
-        // -- CHANGED: The storage path is now "books"
         val pdfRef = storage.reference.child("books/$novelId/$filename")
 
         pdfRef.putFile(pdfUri)
@@ -161,7 +158,7 @@ class UploadPdfFragment : Fragment() {
                     val pdfUrl = downloadUrl.toString()
                     Log.d("UploadPdfFragment", "PDF uploaded successfully. URL: $pdfUrl")
 
-                    // -- CHANGED: The Firestore document is updated in the "books" collection
+                    // The Firestore document is updated in the "books" collection
                     firestore.collection("books").document(novelId)
                         .update(mapOf("pdfUrl" to pdfUrl, "authorId" to userId))
                         .addOnSuccessListener {

@@ -11,7 +11,6 @@ import com.example.novelonline.databinding.ItemBookCardHorizontalBinding
 import com.example.novelonline.databinding.ItemBookCardVerticalBinding
 import com.example.novelonline.models.Book
 
-// A versatile adapter that can handle different view types for books.
 class BookAdapter(
     private val viewType: Int,
     private val onBookClicked: (Book) -> Unit

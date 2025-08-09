@@ -1,4 +1,4 @@
-package com.example.novelonline.adapters // Adjust package as needed
+package com.example.novelonline.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.novelonline.R
-import com.example.novelonline.models.Book // Import your Book data class
-
-// If you use Glide for image loading:
-// import com.bumptech.glide.Glide
-// import android.widget.ImageView
+import com.example.novelonline.models.Book
 
 class BooksAdapter(
     private val books: List<Book>,
@@ -23,12 +19,12 @@ class BooksAdapter(
 ) : RecyclerView.Adapter<BooksAdapter.BookViewHolder>() {
 
     inner class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val bookCoverImageView: ImageView = itemView.findViewById(R.id.book_cover_image_view) // If you add ImageView
+        val bookCoverImageView: ImageView = itemView.findViewById(R.id.book_cover_image_view)
         val bookTitleTextView: TextView = itemView.findViewById(R.id.book_title_text_view)
         val chapterCountTextView: TextView = itemView.findViewById(R.id.chapter_count_text_view)
         val lastUpdatedTextView: TextView = itemView.findViewById(R.id.last_updated_text_view)
         val createdOnTextView: TextView = itemView.findViewById(R.id.created_on_text_view)
-        val deleteButton: ImageButton = itemView.findViewById(R.id.delete_book_button) // NEW view
+        val deleteButton: ImageButton = itemView.findViewById(R.id.delete_book_button)
 
 
         init {
@@ -54,7 +50,7 @@ class BooksAdapter(
         holder.lastUpdatedTextView.text = "Last Updated: ${book.lastUpdated}"
         holder.createdOnTextView.text = "Created On: ${book.createdOn}"
 
-        // Load book cover image (if you're using Glide/Coil)
+        // Load book cover image
         book.coverImageUrl?.let { url ->
             Glide.with(holder.itemView.context)
                 .load(url)
@@ -63,7 +59,7 @@ class BooksAdapter(
                 .error(R.drawable.baseline_error_outline_24)
                 .into(holder.bookCoverImageView)
         } ?: run {
-            // Set a default image if coverUrl is null
+            // default image if coverUrl is null
             holder.bookCoverImageView.setImageResource(R.drawable.baseline_book_placeholder_24)
         } // Default if no URL
     }

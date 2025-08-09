@@ -8,6 +8,6 @@ data class BookFair(
     val endDate: String,
     val latitude: Double,
     val longitude: Double,
-    var straightLineDistanceKm: Float? = null, // Renamed for clarity
-    var drivingDistance: String? = null // To store the formatted driving distance text
+    var straightLineDistanceKm: Float? = null,
+    var drivingDistance: String? = null
 )

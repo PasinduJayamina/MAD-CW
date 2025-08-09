@@ -1,4 +1,4 @@
-package com.example.novelonline.fragments // Adjust package as needed
+package com.example.novelonline.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,8 +14,6 @@ import com.google.android.material.color.MaterialColors
 
 class ReadChapterFragment : Fragment() {
 
-    // Use a nullable binding to prevent memory leaks,
-    // and a non-null accessor for convenience.
     private var _binding: FragmentReadChapterBinding? = null
     private val binding get() = _binding!!
 
@@ -23,13 +21,11 @@ class ReadChapterFragment : Fragment() {
     private var novelId: String? = null
     private var chapterId: String? = null
 
-    // Use `sp` for font size to respect user settings, and manage it as a float.
-    // The default font size should be a reasonable starting point.
     private var currentFontSizeSp: Float = 18f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Retrieve the arguments, which is the correct place for this.
+        // Retrieve the arguments
         arguments?.let {
             novelId = it.getString(ARG_NOVEL_ID)
             chapterId = it.getString(ARG_CHAPTER_ID)
@@ -49,12 +45,10 @@ class ReadChapterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupClickListeners()
-        // It's good to call this from onViewCreated to ensure the view is ready.
-        // TODO: fetchChapterContent(novelId, chapterId)
     }
 
     private fun setupClickListeners() {
-        // Back button to navigate back. The ID is correctly referenced.
+        // Back button to navigate back.
         binding.toolbar.findViewById<View>(R.id.backButton).setOnClickListener {
             findNavController().popBackStack()
         }
@@ -66,7 +60,6 @@ class ReadChapterFragment : Fragment() {
 
         // Font size controls
         binding.increaseFontButton.setOnClickListener {
-            // Check for a reasonable upper limit for the font size.
             if (currentFontSizeSp < 32f) {
                 currentFontSizeSp += 2f
                 binding.contentTextView.textSize = currentFontSizeSp
@@ -74,7 +67,6 @@ class ReadChapterFragment : Fragment() {
         }
 
         binding.decreaseFontButton.setOnClickListener {
-            // Check for a reasonable lower limit for the font size.
             if (currentFontSizeSp > 12f) {
                 currentFontSizeSp -= 2f
                 binding.contentTextView.textSize = currentFontSizeSp
@@ -92,7 +84,6 @@ class ReadChapterFragment : Fragment() {
     }
 
     private fun toggleSettingsPanelVisibility() {
-        // Using `View.VISIBLE` and `View.GONE` is correct.
         if (binding.settingsPanel.visibility == View.GONE) {
             binding.settingsPanel.visibility = View.VISIBLE
         } else {
@@ -150,20 +141,16 @@ class ReadChapterFragment : Fragment() {
 
     private fun fetchChapterContent(novelId: String?, chapterId: String?) {
         if (novelId == null || chapterId == null) {
-            // It's good practice to handle the case where arguments are missing.
-            // You might want to show an error message or navigate back.
             return
         }
 
         // TODO: Implement logic to fetch chapter content from a repository or database (e.g., Firebase)
-        // For demonstration purposes, we will set placeholder text
         binding.chapterTitleTextView.text = "Chapter 1: The Beginning"
         binding.contentTextView.text = getString(R.string.placeholder_chapter_content)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // This is crucial to prevent memory leaks.
         _binding = null
     }
 

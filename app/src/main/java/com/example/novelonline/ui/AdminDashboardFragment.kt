@@ -25,7 +25,6 @@ class AdminDashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // This line now correctly references your TextView's ID
         binding.textViewAdminWelcome.text = "Welcome, Admin!"
 
         binding.buttonLogoutAdmin.setOnClickListener {

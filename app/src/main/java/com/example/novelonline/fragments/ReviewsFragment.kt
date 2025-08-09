@@ -1,4 +1,4 @@
-package com.example.novelonline.fragments // Adjust package as needed
+package com.example.novelonline.fragments
 
 
 import android.os.Bundle
@@ -10,7 +10,7 @@ import com.example.novelonline.databinding.FragmentReviewsBinding
 
 class ReviewsFragment : Fragment() {
 
-    // Use view binding to access views in the layout
+    // view binding to access views in the layout
     private var _binding: FragmentReviewsBinding? = null
     private val binding get() = _binding!!
 
@@ -28,28 +28,18 @@ class ReviewsFragment : Fragment() {
 
         // Set up the back button click listener
         binding.toolbar.findViewById<View>(com.example.novelonline.R.id.backButton).setOnClickListener {
-            // Handle back navigation. You can pop the back stack.
-            // For example:
-            // findNavController().popBackStack()
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        // Example: Set up the submit button click listener
+        // Set up the submit button click listener
         binding.submitReviewButton.setOnClickListener {
             val rating = binding.addReviewRatingBar.rating
             val reviewText = binding.addReviewEditText.text.toString()
 
             // TODO: Implement logic to submit the review to a database (e.g., Firebase)
-            // You will need to get the user ID, book ID, etc., and send this data.
-            // Example:
-            // saveReviewToFirebase(rating, reviewText)
         }
 
         // TODO: Set up the RecyclerView for displaying reviews
-        // This will require an adapter and a layout manager.
-        // For example:
-        // binding.reviewsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        // binding.reviewsRecyclerView.adapter = ReviewsAdapter(reviewList)
     }
 
     override fun onDestroyView() {
