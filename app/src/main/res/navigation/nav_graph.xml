@@ -99,7 +99,11 @@
             app:argType="string" />
         <action
             android:id="@+id/action_genreDetailFragment_to_novelDetailsFragment"
-            app:destination="@id/NovelDetails" />
+            app:destination="@id/NovelDetails" >
+            <argument
+                android:name="novelId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -114,6 +118,9 @@
         android:name="com.example.novelonline.fragments.NovelDetailsFragment"
         android:label="Novel Details"
         tools:layout="@layout/fragment_novel_details" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
         <action
             android:id="@+id/action_NovelDetails_to_readChaptersFragment"
             app:destination="@id/readChaptersFragment" />
