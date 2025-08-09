@@ -27,7 +27,7 @@
                 android:id="@+id/chapter_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chapter 1: The Awakening"
+                android:text=""
                 android:textSize="18sp"
                 android:textColor="#000000"
                 android:textStyle="bold"
@@ -45,7 +45,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Saved: July 29, 2025"
+                    android:text=""
                     android:textSize="14sp"
                     android:textColor="#666666" />
 
@@ -53,7 +53,7 @@
                     android:id="@+id/word_count_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Words: 1200"
+                    android:text=""
                     android:textSize="14sp"
                     android:textColor="#666666" />
             </LinearLayout>

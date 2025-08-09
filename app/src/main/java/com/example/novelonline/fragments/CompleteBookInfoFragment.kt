@@ -162,9 +162,10 @@ class CompleteBookInfoFragment : Fragment() {
 
             // Now, you can update Firestore
             updateNovelInFirestore(novelId, selectedLanguage, selectedBookType, selectedGenre)
+            val action = CompleteBookInfoFragmentDirections.actionCompleteBookInfoFragmentToWriteChaptersFragment(novelId)
 
             // Navigate to the next fragment
-            findNavController().navigate(R.id.action_completeBookInfoFragment_to_writeChaptersFragment)
+            findNavController().navigate(action)
         }
     }
     private fun updateNovelInFirestore(

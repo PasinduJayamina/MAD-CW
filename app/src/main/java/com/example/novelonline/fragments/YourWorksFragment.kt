@@ -1,4 +1,4 @@
-package com.example.novelonline.fragments // Adjust package as needed
+package com.example.novelonline.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -14,11 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.novelonline.R
 import com.example.novelonline.adapters.BooksAdapter
-import com.example.novelonline.adapters.UnpublishedChaptersAdapter
 import com.example.novelonline.databinding.FragmentYourWorksBinding
 import com.example.novelonline.models.Book
-import com.example.novelonline.models.Chapter
-import java.util.UUID
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import java.util.Date
 
 class YourWorksFragment : Fragment() {
 
@@ -27,53 +31,26 @@ class YourWorksFragment : Fragment() {
 
     private lateinit var backArrow: TextView
     private lateinit var createNewBookButton: Button
-    private lateinit var unpublishedChaptersRecyclerView: RecyclerView
     private lateinit var booksRecyclerView: RecyclerView
+    private lateinit var myBooksTitle: TextView
 
-    // Dummy data to simulate a data source. In a real app, this would be from Firestore.
-    private val chapters = mutableListOf(
-        Chapter("c1", "b1", "Chapter 1: The Beginning", "July 28, 2025", 1500),
-        Chapter("c2", "b1", "Chapter 2: The Journey", "July 27, 2025", 2100),
-        Chapter("c3", "b2", "Untitled Chapter", "July 26, 2025", 800)
-    )
-    private val books = mutableListOf(
-        Book(
-            id = "b1",
-            title = "The Dragon's Ascent",
-            author = "Your Name", // Added author
-            coverImageUrl = "", // Must be a String, not null or a number
-            chapterCount = 15,
-            lastUpdated = "July 29, 2025",
-            createdOn = "June 1, 2025"
-        ),
-        Book(
-            id = "b2",
-            title = "Eternal Embrace",
-            author = "Your Name",
-            coverImageUrl = "",
-            chapterCount = 8,
-            lastUpdated = "July 20, 2025",
-            createdOn = "May 10, 2025"
-        ),
-        Book(
-            id = "b3",
-            title = "Echoes of Tomorrow",
-            author = "Your Name",
-            coverImageUrl = "",
-            chapterCount = 20,
-            lastUpdated = "July 25, 2025",
-            createdOn = "April 1, 2025"
-        )
-    )
+    // Firebase instances
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
+    private var userId: String? = null
 
-    // Adapters need to be class-level to be able to notify them of data changes
-    private lateinit var unpublishedChaptersAdapter: UnpublishedChaptersAdapter
+    // Lists for holding books from different collections and the combined list
+    private val books = mutableListOf<Book>()
+    private val booksFromBooksCollection = mutableListOf<Book>()
+    private val booksFromUploadedBooksCollection = mutableListOf<Book>()
+
+    // Adapter for the combined list
     private lateinit var booksAdapter: BooksAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentYourWorksBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -81,33 +58,24 @@ class YourWorksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize Firebase
+        firestore = Firebase.firestore
+        auth = Firebase.auth
+        userId = auth.currentUser?.uid
+
+        if (userId == null) {
+            Toast.makeText(requireContext(), "You must be logged in to view your works.", Toast.LENGTH_LONG).show()
+            findNavController().popBackStack()
+            return
+        }
+
+        // Initialize UI elements
         backArrow = binding.backArrow
         createNewBookButton = binding.createNewBookButton
-        unpublishedChaptersRecyclerView = binding.unpublishedChaptersRecyclerView
         booksRecyclerView = binding.booksRecyclerView
+        myBooksTitle = binding.myBooks
 
-        // --- Set up RecyclerViews ---
-
-        // Unpublished Chapters RecyclerView
-        unpublishedChaptersRecyclerView.layoutManager = LinearLayoutManager(context)
-        unpublishedChaptersAdapter = UnpublishedChaptersAdapter(
-            chapters,
-            onItemClick = { chapter ->
-                // TODO: Handle click on an unpublished chapter (e.g., open editor)
-                Log.d("YourWorksFragment", "Chapter card clicked: ${chapter.title}")
-            },
-            onDeleteClick = { chapter ->
-                showDeleteConfirmationDialog(
-                    "Are you sure you want to delete this chapter?",
-                    "This action cannot be undone.",
-                    chapter.id,
-                    "chapter"
-                )
-            }
-        )
-        unpublishedChaptersRecyclerView.adapter = unpublishedChaptersAdapter
-
-        // Books RecyclerView
+        // --- Set up RecyclerView ---
         booksRecyclerView.layoutManager = LinearLayoutManager(context)
         booksAdapter = BooksAdapter(
             books,
@@ -118,33 +86,96 @@ class YourWorksFragment : Fragment() {
             onDeleteClick = { book ->
                 showDeleteConfirmationDialog(
                     "Are you sure you want to delete the book \"${book.title}\"?",
-                    "Deleting a book will also delete all its chapters. This action cannot be undone.",
+                    "Deleting this book will also delete all its chapters. This action cannot be undone.",
                     book.id,
-                    "book"
+                    book.sourceCollection // Pass the source collection for deletion
                 )
             }
         )
         booksRecyclerView.adapter = booksAdapter
 
-        // --- Set up click listeners ---
+        // --- Fetch data from Firestore ---
+        listenForBooks()
 
+        // --- Set up click listeners ---
         backArrow.setOnClickListener {
             findNavController().navigateUp()
         }
 
         createNewBookButton.setOnClickListener {
-            // TODO: Navigate to the "Become a Writer" screen or directly to "Add Title"
-            // findNavController().navigate(R.id.action_yourWorks_to_becomeWriterFragment)
+            findNavController().navigate(R.id.action_yourWorksFragment_to_becomeWriterFragment)
         }
     }
 
-    // New function to show a delete confirmation dialog
+    /**
+     * Listens for real-time changes to the user's books from both "books" and "uploaded books"
+     * Firestore collections and combines them into a single list.
+     */
+    private fun listenForBooks() {
+        if (userId == null) return
+
+        // Listen to the "books" collection
+        firestore.collection("books")
+            .whereEqualTo("authorId", userId)
+            .addSnapshotListener { booksSnapshot, e ->
+                if (e != null) {
+                    Log.w("YourWorksFragment", "Listen failed for 'books' collection.", e)
+                    return@addSnapshotListener
+                }
+
+                if (booksSnapshot != null) {
+                    booksFromBooksCollection.clear()
+                    for (doc in booksSnapshot.documents) {
+                        val book = doc.toObject(Book::class.java)?.copy(sourceCollection = "books")
+                        book?.let {
+                            booksFromBooksCollection.add(it)
+                        }
+                    }
+                    updateCombinedListAndNotify()
+                } else {
+                    Log.d("YourWorksFragment", "Books snapshot is null.")
+                }
+            }
+
+        // Listen to the "uploaded books" collection
+        firestore.collection("uploaded books")
+            .whereEqualTo("authorId", userId)
+            .addSnapshotListener { uploadedBooksSnapshot, e2 ->
+                if (e2 != null) {
+                    Log.w("YourWorksFragment", "Listen failed for 'uploaded books' collection.", e2)
+                    return@addSnapshotListener
+                }
+
+                if (uploadedBooksSnapshot != null) {
+                    booksFromUploadedBooksCollection.clear()
+                    for (doc in uploadedBooksSnapshot.documents) {
+                        val book = doc.toObject(Book::class.java)?.copy(sourceCollection = "uploaded books")
+                        book?.let {
+                            booksFromUploadedBooksCollection.add(it)
+                        }
+                    }
+                    updateCombinedListAndNotify()
+                } else {
+                    Log.d("YourWorksFragment", "Uploaded books snapshot is null.")
+                }
+            }
+    }
+
+    private fun updateCombinedListAndNotify() {
+        books.clear()
+        books.addAll(booksFromBooksCollection)
+        books.addAll(booksFromUploadedBooksCollection)
+        // Sort the combined list by a relevant field, e.g., creation date
+        // Note: 'createdOn' in your Book data class is a String, so we'll need to sort on that.
+        books.sortByDescending { it.createdOn }
+        booksAdapter.notifyDataSetChanged()
+    }
+
     private fun showDeleteConfirmationDialog(title: String, message: String, itemId: String, itemType: String) {
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setTitle(title)
             .setMessage(message)
             .setPositiveButton("Yes, I'm sure") { dialog, _ ->
-                // Show a second, more serious confirmation dialog
                 showFinalDeleteConfirmation(itemId, itemType)
                 dialog.dismiss()
             }
@@ -154,13 +185,11 @@ class YourWorksFragment : Fragment() {
             .show()
     }
 
-    // New function for the final, more serious confirmation dialog
     private fun showFinalDeleteConfirmation(itemId: String, itemType: String) {
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setTitle("Are you REALLY sure?")
-            .setMessage("This will permanently delete this $itemType and all associated data. This cannot be recovered.")
+            .setMessage("This will permanently delete this book and all associated data. This cannot be recovered.")
             .setPositiveButton("Yes, delete it!") { dialog, _ ->
-                // Call the actual deletion logic
                 deleteItem(itemId, itemType)
                 dialog.dismiss()
             }
@@ -170,37 +199,21 @@ class YourWorksFragment : Fragment() {
             .show()
     }
 
-    // New function to handle the actual deletion logic
-    private fun deleteItem(itemId: String, itemType: String) {
-        // Here you would implement your Firebase Firestore deletion logic
-        // For demonstration, we'll just remove the item from the dummy list
-        Log.d("YourWorksFragment", "Attempting to delete $itemType with ID: $itemId")
-
-        if (itemType == "book") {
-            val bookToRemove = books.find { it.id == itemId }
-            if (bookToRemove != null) {
-                val index = books.indexOf(bookToRemove)
-                books.removeAt(index)
-                booksAdapter.notifyItemRemoved(index)
-                Log.d("YourWorksFragment", "Book deleted: ${bookToRemove.title}")
+    private fun deleteItem(bookId: String, sourceCollection: String) {
+        firestore.collection(sourceCollection).document(bookId)
+            .delete()
+            .addOnSuccessListener {
+                Log.d("YourWorksFragment", "Book deleted successfully from $sourceCollection.")
+                Toast.makeText(requireContext(), "Book deleted.", Toast.LENGTH_SHORT).show()
             }
-        } else if (itemType == "chapter") {
-            val chapterToRemove = chapters.find { it.id == itemId }
-            if (chapterToRemove != null) {
-                val index = chapters.indexOf(chapterToRemove)
-                chapters.removeAt(index)
-                unpublishedChaptersAdapter.notifyItemRemoved(index)
-                Log.d("YourWorksFragment", "Chapter deleted: ${chapterToRemove.title}")
+            .addOnFailureListener { e ->
+                Log.e("YourWorksFragment", "Error deleting book from $sourceCollection: ", e)
+                Toast.makeText(requireContext(), "Failed to delete book.", Toast.LENGTH_SHORT).show()
             }
-        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance() = YourWorksFragment()
     }
 }

@@ -41,7 +41,7 @@
                 android:id="@+id/book_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="The Dragon's Ascent"
+                android:text=""
                 android:textSize="18sp"
                 android:textColor="#000000"
                 android:textStyle="bold"
@@ -53,7 +53,7 @@
                 android:id="@+id/chapter_count_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chapters: 15"
+                android:text=""
                 android:textSize="14sp"
                 android:textColor="#666666"
                 android:layout_marginBottom="2dp" />
@@ -62,7 +62,7 @@
                 android:id="@+id/last_updated_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Last Updated: July 29, 2025"
+                android:text=""
                 android:textSize="14sp"
                 android:textColor="#666666"
                 android:layout_marginBottom="2dp" />
@@ -71,7 +71,7 @@
                 android:id="@+id/created_on_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Created On: June 1, 2025"
+                android:text=""
                 android:textSize="14sp"
                 android:textColor="#666666" />
         </LinearLayout>

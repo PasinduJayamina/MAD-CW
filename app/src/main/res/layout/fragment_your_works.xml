@@ -55,35 +55,9 @@
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
 
-            <!-- Unpublished Chapters Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Unpublished Chapters"
-                android:textSize="18sp"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="8dp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/unpublished_chapters_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/item_unpublished_chapter_card" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="#EEEEEE" />
-
             <!-- Books Section -->
             <TextView
+                android:id="@+id/my_books"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Books"
@@ -99,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_book_card" />
-
         </LinearLayout>
     </ScrollView>
 

@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.novelonline.databinding.FragmentUploadPdfBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -29,6 +31,7 @@ class UploadPdfFragment : Fragment() {
     // Firebase instances
     private lateinit var storage: FirebaseStorage
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     // Novel ID received via Safe Args
     private var novelId: String? = null
@@ -66,9 +69,9 @@ class UploadPdfFragment : Fragment() {
         // Initialize Firebase instances
         storage = Firebase.storage
         firestore = Firebase.firestore
+        auth = Firebase.auth
 
         // Retrieve the novelId from arguments using Safe Args
-        // If no novelId is provided, args.novelId will be "null" from the nav_graph default value
         val args: UploadPdfFragmentArgs by navArgs()
         novelId = args.novelId.takeIf { it != "null" }
 
@@ -118,26 +121,35 @@ class UploadPdfFragment : Fragment() {
         binding.pdfStatusText.text = "Uploading PDF..."
         binding.completeBookInfoButton.isEnabled = false
 
+        // Get the current user's ID
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            Toast.makeText(requireContext(), "You must be signed in to upload a book.", Toast.LENGTH_SHORT).show()
+            binding.pdfStatusText.text = "Please sign in."
+            binding.completeBookInfoButton.isEnabled = true
+            return
+        }
+
         // Check if novelId is null. If so, create a new one.
         if (novelId == null) {
             val newBookRef = firestore.collection("uploaded books").document()
             novelId = newBookRef.id
-            // Save a placeholder to the new document
-            newBookRef.set(mapOf("title" to "Untitled Novel"))
+            // Save a placeholder to the new document, including the authorId
+            newBookRef.set(mapOf("title" to "Untitled Novel", "authorId" to userId))
                 .addOnSuccessListener {
-                    Log.d("UploadPdfFragment", "New novelId created: $novelId")
-                    performPdfUpload(pdfUri, novelId!!)
+                    Log.d("UploadPdfFragment", "New novelId created: $novelId with authorId: $userId")
+                    performPdfUpload(pdfUri, novelId!!, userId)
                 }
                 .addOnFailureListener { e ->
                     handleUploadError("Failed to create new novel ID.", e)
                 }
         } else {
             // novelId already exists, proceed with the upload.
-            performPdfUpload(pdfUri, novelId!!)
+            performPdfUpload(pdfUri, novelId!!, userId)
         }
     }
 
-    private fun performPdfUpload(pdfUri: Uri, novelId: String) {
+    private fun performPdfUpload(pdfUri: Uri, novelId: String, userId: String) {
         val filename = UUID.randomUUID().toString() + ".pdf"
         val pdfRef = storage.reference.child("uploaded books/$novelId/$filename")
 
@@ -147,9 +159,9 @@ class UploadPdfFragment : Fragment() {
                     val pdfUrl = downloadUrl.toString()
                     Log.d("UploadPdfFragment", "PDF uploaded successfully. URL: $pdfUrl")
 
-                    // Update the Firestore document with the new PDF URL
+                    // Update the Firestore document with the new PDF URL and authorId
                     firestore.collection("uploaded books").document(novelId)
-                        .update("pdfUrl", pdfUrl)
+                        .update(mapOf("pdfUrl" to pdfUrl, "authorId" to userId))
                         .addOnSuccessListener {
                             binding.pdfStatusText.text = "Upload complete!"
                             Toast.makeText(requireContext(), "PDF uploaded successfully!", Toast.LENGTH_SHORT).show()
@@ -158,7 +170,7 @@ class UploadPdfFragment : Fragment() {
                             findNavController().navigate(action)
                         }
                         .addOnFailureListener { e ->
-                            handleUploadError("Failed to update Firestore with PDF URL", e)
+                            handleUploadError("Failed to update Firestore with PDF URL and authorId", e)
                         }
                 }.addOnFailureListener { e ->
                     handleUploadError("Failed to get download URL", e)

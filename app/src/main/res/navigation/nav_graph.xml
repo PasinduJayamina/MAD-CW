@@ -165,6 +165,9 @@
         <action
             android:id="@+id/action_completeBookInfoFragment_to_writeChaptersFragment"
             app:destination="@id/writeChaptersFragment" >
+            <argument
+                android:name="novelId"
+                app:argType="string" />
         </action>
     </fragment>
 
@@ -173,6 +176,9 @@
         android:name="com.example.novelonline.fragments.WriteChaptersFragment"
         android:label="Write Chapters"
         tools:layout="@layout/fragment_write_chapters" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
         <action
             android:id="@+id/action_writeChaptersFragment_to_yourWorksFragment"
             app:destination="@id/yourWorksFragment" />
@@ -186,6 +192,9 @@
         <action
             android:id="@+id/action_yourWorksFragment_to_editBookDetailFragment2"
             app:destination="@id/editBookDetailFragment" />
+        <action
+            android:id="@+id/action_yourWorksFragment_to_becomeWriterFragment"
+            app:destination="@id/becomeWriterFragment" />
     </fragment>
 
     <fragment
@@ -202,9 +211,9 @@
         <action
             android:id="@+id/action_editBookDetailsFragment_to_writeChaptersFragment"
             app:destination="@id/writeChaptersFragment">
-        <argument
-            android:name="novelId"
-            app:argType="string" />
+            <argument
+                android:name="novelId"
+                app:argType="string" />
         </action>
         <action
             android:id="@+id/action_editBookDetailsFragment_to_yourWorksFragment"
