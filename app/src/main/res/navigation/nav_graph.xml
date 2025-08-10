@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.novelonline.ui.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.novelonline.ui.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.novelonline.ui.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_NovelDetailsFragment"
+            app:destination="@id/NovelDetails" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.example.novelonline.ui.ExploreFragment"
+        android:label="fragment_explore"
+        tools:layout="@layout/fragment_explore" >
+        <action
+            android:id="@+id/action_exploreFragment_to_genreDetailFragment"
+            app:destination="@id/genreDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.example.novelonline.ui.LibraryFragment"
+        android:label="fragment_library"
+        tools:layout="@layout/fragment_library" >
+        <action
+            android:id="@+id/action_LibraryFragment_to_novelDetailsFragment"
+            app:destination="@id/readChapterFragment">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/ReaderDashboardFragment"
+        android:name="com.example.novelonline.fragments.ReaderDashboardFragment"
+        android:label="reader dashboard"
+        tools:layout="@layout/fragment_reader_dashboard" >
+        <action
+            android:id="@+id/action_readerDashboardFragment_to_becomeWriterFragment"
+            app:destination="@id/becomeWriterFragment" />
+        <action
+            android:id="@+id/action_readerDashboardFragment_to_yourWorksFragment"
+            app:destination="@id/yourWorksFragment" />
+        <action
+            android:id="@+id/action_readerDashboardFragment_to_bookFairsFragment"
+            app:destination="@id/bookFairsFragment" />
+        <action
+            android:id="@+id/action_readerDashboardFragment_to_offlineBooksFragment"
+            app:destination="@id/OfflineBooksFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/readChapterFragment"
+        android:name="com.example.novelonline.fragments.ReadChapterFragment"
+        android:label="fragment_read_chapter"
+        tools:layout="@layout/fragment_read_chapter">
+        <argument
+            android:name="pdfUrl"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookFairsFragment"
+        android:name="com.example.novelonline.fragments.BookFairsFragment"
+        android:label="Bok Fairs"
+        tools:layout="@layout/fragment_book_fairs" />
+
+    <fragment
+        android:id="@+id/genreDetailFragment"
+        android:name="com.example.novelonline.ui.GenreDetailFragment"
+        android:label="fragment_genre_detail"
+        tools:layout="@layout/fragment_genre_detail" >
+        <argument
+            android:name="genreName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_genreDetailFragment_to_novelDetailsFragment"
+            app:destination="@id/NovelDetails" >
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/OfflineBooksFragment"
+        android:name="com.example.novelonline.fragments.OfflineBooksFragment"
+        android:label="fragment_offline reading"
+        tools:layout="@layout/fragment_offline_books" >
+        <action
+            android:id="@+id/action_OfflineBooksFragment_to_readChaptersFragment"
+            app:destination="@id/readChapterFragment">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/ReviewFragment"
+        android:name="com.example.novelonline.fragments.ReviewsFragment"
+        android:label="fragment_reviews"
+        tools:layout="@layout/fragment_reviews" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/NovelDetails"
+        android:name="com.example.novelonline.fragments.NovelDetailsFragment"
+        android:label="Novel Details"
+        tools:layout="@layout/fragment_novel_details" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_NovelDetails_to_readChaptersFragment"
+            app:destination="@id/readChapterFragment" />
+        <action
+            android:id="@+id/action_NovelDetails_to_ReviewFragment"
+            app:destination="@id/ReviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/becomeWriterFragment"
+        android:name="com.example.novelonline.fragments.BecomeWriterFragment"
+        android:label="Become a Writer"
+        tools:layout="@layout/fragment_become_a_writer">
+        <action
+            android:id="@+id/action_becomeWriterFragment_to_addTitleFragment"
+            app:destination="@id/addTitleFragment"/>
+        <action
+            android:id="@+id/action_becomeWriterFragment_to_UploadPdfFragment"
+            app:destination="@id/UploadPdfFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/UploadPdfFragment"
+        android:name="com.example.novelonline.fragments.UploadPdfFragment"
+        android:label="Upload pdf"
+        tools:layout="@layout/fragment_upload_pdf">
+        <argument
+            android:name="novelId"
+            app:argType="string"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_uploadPdfFragment_to_editBookDetailsFragment"
+            app:destination="@id/editBookDetailFragment">
+            <argument android:name="novelId" app:argType="string" />
+            <argument android:name="pdfUrl" app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/completeBookInfoFragment"
+        android:name="com.example.novelonline.fragments.CompleteBookInfoFragment"
+        android:label="Complete Book Information"
+        tools:layout="@layout/fragment_complete_book_info" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_completeBookInfoFragment_to_writeChaptersFragment"
+            app:destination="@id/writeChaptersFragment" >
+            <argument
+                android:name="novelId"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/writeChaptersFragment"
+        android:name="com.example.novelonline.fragments.WriteChaptersFragment"
+        android:label="Write Chapters"
+        tools:layout="@layout/fragment_write_chapters" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_writeChaptersFragment_to_yourWorksFragment"
+            app:destination="@id/yourWorksFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/yourWorksFragment"
+        android:name="com.example.novelonline.fragments.YourWorksFragment"
+        android:label="Complete Book Information"
+        tools:layout="@layout/fragment_your_works" >
+        <action
+            android:id="@+id/action_yourWorksFragment_to_editBookDetailFragment2"
+            app:destination="@id/editBookDetailFragment" />
+        <action
+            android:id="@+id/action_yourWorksFragment_to_becomeWriterFragment"
+            app:destination="@id/becomeWriterFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editBookDetailFragment"
+        android:name="com.example.novelonline.fragments.EditBookDetailsFragment"
+        android:label="Complete Book Information"
+        tools:layout="@layout/fragment_edit_book_details" >
+        <argument
+            android:name="novelId"
+            app:argType="string" />
+        <argument
+            android:name="pdfUrl"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_editBookDetailsFragment_to_writeChaptersFragment"
+            app:destination="@id/writeChaptersFragment">
+            <argument
+                android:name="novelId"
+                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_editBookDetailsFragment_to_yourWorksFragment"
+            app:destination="@id/yourWorksFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/addTitleFragment"
+        android:name="com.example.novelonline.fragments.AddTitleFragment"
+        android:label="Complete Book Information"
+        tools:layout="@layout/fragment_add_title" >
+        <action
+            android:id="@+id/action_addTitleFragment_to_completeBookInfoFragment"
+            app:destination="@id/completeBookInfoFragment">
+            <argument
+                android:name="novelId"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+</navigation>

@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editBookDetailFragment"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#FFFFFF"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="&lt;"
+            android:textSize="24sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:paddingEnd="16dp" />
+
+        <TextView
+            android:id="@+id/top_bar_book_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit Book Details"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:gravity="center_horizontal" />
+
+        <Button
+            android:id="@+id/create_chapter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create chapter"
+            android:textColor="#000000"
+            android:background="@drawable/rounded_grey_button_background"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Basic Information Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_white_card_background"
+            android:layout_marginBottom="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Basic Information"
+                android:textSize="14sp"
+                android:textColor="#BBBBBB"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Book Cover Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Book Cover"
+                        android:textSize="16sp"
+                        android:textColor="#000000" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Image size limit: 800px * 600px, within 5MB; format: JPG, JPEG"
+                        android:textSize="12sp"
+                        android:textColor="#888888"
+                        android:layout_marginTop="4dp" />
+                    <Button
+                        android:id="@+id/upload_cover_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Upload"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:background="@drawable/rounded_upload_button_background"
+                        android:drawableStart="@drawable/ic_upload_placeholder"
+                        android:drawablePadding="8dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/book_cover_image_view"
+                    android:layout_width="96dp"
+                    android:layout_height="128dp"
+                    android:background="#E0E0E0"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder_book_cover"
+                    android:layout_marginStart="16dp"
+                    android:contentDescription="Book Cover" />
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+            <!-- Row: Title -->
+            <LinearLayout
+                android:id="@+id/title_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:textColor="#FF0000"
+                android:textSize="16sp"
+                android:layout_marginEnd="4dp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Title"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/book_title_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Title"
+                android:textSize="16sp"
+                android:textColor="#888888"
+                android:layout_marginEnd="8dp" />
+            <ImageView
+                android:id="@+id/title_arrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_right"
+                android:contentDescription="Expand" />
+            </LinearLayout>
+
+        <!-- Title Input/Edit Section (initially hidden) -->
+        <LinearLayout
+            android:id="@+id/title_edit_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingStart="64dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp">
+            <EditText
+                android:id="@+id/title_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter book title"
+                android:inputType="textCapSentences"
+                android:maxLines="1"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:textColorHint="#A0A0A0"
+                android:background="@drawable/rounded_edittext_background"
+                android:padding="8dp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+    <!-- Row: Language -->
+        <LinearLayout
+            android:id="@+id/language_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:textColor="#FF0000"
+                android:textSize="16sp"
+                android:layout_marginEnd="4dp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Language"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/language_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="English"
+                android:textSize="16sp"
+                android:textColor="#888888"
+                android:layout_marginEnd="8dp" />
+            <ImageView
+                android:id="@+id/language_arrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_right"
+                android:contentDescription="Expand"
+                app:tint="#000000" />
+        </LinearLayout>
+
+    <!-- Language Selection List (initially hidden) -->
+    <LinearLayout
+        android:id="@+id/language_options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="64dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            android:id="@+id/option_american_english"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="American English"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_uk_english"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="UK English"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+    <!-- Row: Type -->
+    <LinearLayout
+        android:id="@+id/type_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*"
+            android:textColor="#FF0000"
+            android:textSize="16sp"
+            android:layout_marginEnd="4dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Type"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+        <TextView
+            android:id="@+id/type_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Novels"
+            android:textSize="16sp"
+            android:textColor="#888888"
+            android:layout_marginEnd="8dp" />
+        <ImageView
+            android:id="@+id/type_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Expand"
+            app:tint="#000000" />
+    </LinearLayout>
+
+    <!-- Type Selection List (initially hidden) -->
+    <LinearLayout
+        android:id="@+id/type_options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="64dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            android:id="@+id/option_fan_fiction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fan-fiction"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_novels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Novels"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_short_story"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Short story"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+    <!-- Row: Genre -->
+    <LinearLayout
+        android:id="@+id/genre_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*"
+            android:textColor="#FF0000"
+            android:textSize="16sp"
+            android:layout_marginEnd="4dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Genre"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+        <TextView
+            android:id="@+id/genre_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Urban(-Male Oriented)"
+            android:textSize="16sp"
+            android:textColor="#888888"
+            android:layout_marginEnd="8dp" />
+        <ImageView
+            android:id="@+id/genre_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Expand"
+            app:tint="#000000" />
+    </LinearLayout>
+
+    <!-- Genre Selection List (initially hidden) -->
+    <LinearLayout
+        android:id="@+id/genre_options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="64dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            android:id="@+id/option_romance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Romance"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_mystery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mystery"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_fantasy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fantasy"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_science_fiction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Science Fiction"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_thriller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thriller"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_historical_fiction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Historical Fiction"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+    <!-- Row: Synopsis -->
+    <LinearLayout
+        android:id="@+id/synopsis_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Synopsis"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+        <TextView
+            android:id="@+id/synopsis_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Synopsis"
+            android:textSize="16sp"
+            android:textColor="#888888"
+            android:layout_marginEnd="8dp" />
+        <ImageView
+            android:id="@+id/synopsis_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Expand"
+            app:tint="#000000" />
+    </LinearLayout>
+
+    <!-- Synopsis Input/Edit Section (initially hidden) -->
+    <LinearLayout
+        android:id="@+id/synopsis_edit_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="64dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+        <EditText
+            android:id="@+id/synopsis_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter book synopsis"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minLines="3"
+            android:gravity="top|start"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:textColorHint="#A0A0A0"
+            android:background="@drawable/rounded_edittext_background"
+            android:padding="8dp"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+    <!-- Row: Tags -->
+    <LinearLayout
+        android:id="@+id/tags_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tags"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+        <TextView
+            android:id="@+id/tags_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Tags"
+            android:textSize="16sp"
+            android:textColor="#888888"
+            android:layout_marginEnd="8dp" />
+        <ImageView
+            android:id="@+id/tags_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Expand"
+            app:tint="#000000" />
+    </LinearLayout>
+
+    <!-- Tags Input/Edit Section (initially hidden) -->
+    <LinearLayout
+        android:id="@+id/tags_edit_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="64dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+        <EditText
+            android:id="@+id/tags_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter tags (comma separated)"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:textColorHint="#A0A0A0"
+            android:background="@drawable/rounded_edittext_background"
+            android:padding="8dp"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+</LinearLayout>
+
+    <!-- More Information Card -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_white_card_background"
+    android:layout_marginBottom="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="More Information"
+        android:textSize="14sp"
+        android:textColor="#BBBBBB"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Row: Warning Notice -->
+    <LinearLayout
+        android:id="@+id/warning_notice_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Warning Notice"
+        android:textSize="16sp"
+        android:textColor="#000000" />
+    <TextView
+        android:id="@+id/warning_notice_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="None"
+        android:textSize="16sp"
+        android:textColor="#888888"
+        android:layout_marginEnd="8dp" />
+    <ImageView
+        android:id="@+id/warning_notice_arrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_arrow_right"
+        android:contentDescription="Expand" />
+    </LinearLayout>
+
+        <!-- Warning Notice Selection List (initially hidden) -->
+    <LinearLayout
+        android:id="@+id/warning_notice_options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="64dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            android:id="@+id/option_no_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="None"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_mature_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mature Content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_graphic_violence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Graphic Violence"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+        <!-- Row: Length -->
+    <LinearLayout
+        android:id="@+id/length_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Length"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+        <TextView
+            android:id="@+id/length_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Short"
+            android:textSize="16sp"
+            android:textColor="#888888"
+            android:layout_marginEnd="8dp" />
+        <ImageView
+            android:id="@+id/length_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Expand"
+            app:tint="#000000" />
+    </LinearLayout>
+
+        <!-- Length Selection List (initially hidden) -->
+    <LinearLayout
+        android:id="@+id/length_options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="64dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            android:id="@+id/option_short_length"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Short (under 50k words)"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_medium_length"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Medium (50k - 100k words)"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+        <TextView
+            android:id="@+id/option_long_length"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Long (over 100k words)"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?android:attr/selectableItemBackground">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Status"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+        <TextView
+            android:id="@+id/status_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NEW"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+</LinearLayout>
+
+        <!-- Contact Us Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_white_card_background"
+        android:layout_marginBottom="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contact Us"
+            android:textSize="14sp"
+            android:textColor="#BBBBBB"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Editor-in-Charge"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Author Support"
+                android:textSize="16sp"
+                android:textColor="#888888" />
+        </LinearLayout>
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Email Address"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="writershelper@webnovel.com"
+                android:textSize="16sp"
+                android:textColor="#888888" />
+        </LinearLayout>
+    </LinearLayout>
+
+        <Button
+            android:id="@+id/delete_book_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" Delete This Book"
+            android:textColor="#450303"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/rounded_gray_background"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

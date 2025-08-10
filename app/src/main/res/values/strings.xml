@@ -1,3 +1,30 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">NovelOnline</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">Novel Online</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button_text">Login</string>
+    <string name="signup_prompt">Don\'t have an account? Sign up</string>
+    <string name="app_logo_description">App Logo</string>
+
+    <!-- Home Screen -->
+    <string name="explore_title">Explore</string>
+    <string name="top_ranked_title">Top Ranked</string>
+    <string name="search_icon_description">Search Icon</string>
+
+    <!-- Other UI Text -->
+    <string name="genres_title">Genres</string>
+    <string name="back_button_description">Back button</string>
+
+    <string name="placeholder_chapter_content">
+        <![CDATA[
+        <p>This is placeholder content for a chapter. This text can be a long string of words that fills up the reading screen. It\'s important to have some content here for testing the layout and scrolling behavior.</p>
+        <p>You can use this string to verify that the font size controls and theme switching are working correctly before you integrate with your actual data source like Firebase.</p>
+        <p>In a real application, you would replace this with the actual chapter text fetched from your database.</p>
+        <p>This is a second paragraph to show how the line spacing will work with multiple paragraphs. The reader should be able to scroll through the content smoothly and the line height should be consistent.</p>
+        ]]>
+    </string>
+
 </resources>

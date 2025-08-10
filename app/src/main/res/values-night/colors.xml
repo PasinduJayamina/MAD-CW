@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="reader_panel_bg">#212121</color>
+
+    <color name="novel_background">#121212</color>
+    <color name="novel_card_background">#212121</color>
+    <color name="novel_text_primary">#E0E0E0</color>
+    <color name="novel_text_secondary">#BDBDBD</color>
+    <color name="novel_button_text">#E0E0E0</color>
+</resources>

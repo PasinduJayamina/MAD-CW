@@ -1,20 +1,35 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    alias(libs.plugins.google.gms.services)
+    id("com.google.devtools.ksp")
 }
 
 android {
     namespace = "com.example.novelonline"
-    compileSdk = 35
+    // Changed to 34 to resolve the AGP warning. This is recommended.
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.novelonline"
         minSdk = 24
-        targetSdk = 35
+        // Changed to 34 to match compileSdk
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Read the API key from local.properties and make it available as a build field
+        val properties = Properties()
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+        }
+        buildConfigField("String", "MAPS_API_KEY", "\"${properties.getProperty("MAPS_API_KEY")}\"")
     }
 
     buildTypes {
@@ -33,6 +48,12 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    buildFeatures {
+        viewBinding = true
+        // ADD THIS LINE TO ENABLE BUILDCONFIG
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -42,7 +63,37 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+    implementation(libs.androidx.room.common.jvm)
+    implementation(libs.androidx.room.runtime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
+
+    implementation(libs.glide)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
+    // Firebase dependencies
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+
+    // Add the dependencies for Firebase products you want to use
+    // Versions are managed by the BoM, so they are not specified here
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
+
+    // This is for fragment management, not a Firebase library
+    implementation(libs.androidx.fragment)
+    implementation("com.google.firebase:firebase-storage-ktx")
 }
