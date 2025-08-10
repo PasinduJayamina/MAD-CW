@@ -137,11 +137,11 @@ class EditBookDetailsFragment : Fragment() {
                         if (!it.coverImageUrl.isNullOrEmpty()) {
                             Glide.with(this)
                                 .load(it.coverImageUrl)
-                                .placeholder(R.drawable.`placeholder_book_cover.webp`)
-                                .error(R.drawable.`placeholder_book_cover.webp`)
+                                .placeholder(R.drawable.`placeholder_book_cover`)
+                                .error(R.drawable.`placeholder_book_cover`)
                                 .into(binding.bookCoverImageView)
                         } else {
-                            binding.bookCoverImageView.setImageResource(R.drawable.`placeholder_book_cover.webp`)
+                            binding.bookCoverImageView.setImageResource(R.drawable.`placeholder_book_cover`)
                         }
                     }
                 } else {
