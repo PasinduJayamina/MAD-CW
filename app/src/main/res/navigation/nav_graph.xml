@@ -48,9 +48,14 @@
 
     <fragment
         android:id="@+id/libraryFragment"
-        android:name="com.example.novelonline.ui.HomeFragment"
+        android:name="com.example.novelonline.ui.LibraryFragment"
         android:label="fragment_library"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_library" >
+        <action
+            android:id="@+id/action_LibraryFragment_to_novelDetailsFragment"
+            app:destination="@id/readChapterFragment">
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/ReaderDashboardFragment"

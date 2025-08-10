@@ -39,10 +39,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.bottomNav.setOnItemSelectedListener { item ->
-            if (item.itemId == R.id.libraryFragment ) {
-                Toast.makeText(this, "${item.title} is not available yet", Toast.LENGTH_SHORT).show()
-                return@setOnItemSelectedListener false
-            }
             NavigationUI.onNavDestinationSelected(item, navController)
             return@setOnItemSelectedListener true
         }

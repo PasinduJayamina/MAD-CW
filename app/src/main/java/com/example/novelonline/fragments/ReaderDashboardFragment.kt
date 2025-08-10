@@ -1,15 +1,18 @@
 package com.example.novelonline.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -33,7 +36,22 @@ class ReaderDashboardFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
 
+    // Launcher for picking an image from the gallery
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+
+    // Variable to hold the URI for camera-captured images
+    private var imageUri: Uri? = null
+
+    // Launcher for taking a picture with the camera
+    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            imageUri?.let { uri ->
+                uploadProfilePicture(uri)
+            }
+        } else {
+            Toast.makeText(requireContext(), "Image capture cancelled", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +69,7 @@ class ReaderDashboardFragment : Fragment() {
         storage = Firebase.storage
 
         setupClickListeners()
-        setupImagePickerLauncher()
+        setupImagePickerLauncher() // This now only handles the gallery intent
         loadUserProfile()
     }
 
@@ -69,10 +87,9 @@ class ReaderDashboardFragment : Fragment() {
         }
 
         binding.editProfileIcon.setOnClickListener {
-            openImagePicker()
+            showImageSourceDialog() // Now calls the dialog function
         }
 
-        // Add the click listener for the new offline reading card
         binding.offlineReadingCard.setOnClickListener {
             findNavController().navigate(R.id.action_readerDashboardFragment_to_offlineBooksFragment)
         }
@@ -87,7 +104,6 @@ class ReaderDashboardFragment : Fragment() {
                     if (document.exists()) {
                         val user = document.toObject(User::class.java)
                         user?.let {
-                            // Combine first name and last name to create the full name
                             val fullName = "${it.firstName} ${it.lastName}".trim()
                             binding.userNameTextView.text = fullName
                             if (it.profilePictureUrl.isNotEmpty()) {
@@ -108,6 +124,7 @@ class ReaderDashboardFragment : Fragment() {
         }
     }
 
+    // This launcher setup is now specifically for the gallery
     private fun setupImagePickerLauncher() {
         pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -119,11 +136,40 @@ class ReaderDashboardFragment : Fragment() {
         }
     }
 
-    private fun openImagePicker() {
+    private fun showImageSourceDialog() {
+        val options = arrayOf("Take Photo", "Choose from Gallery")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Upload Profile Picture")
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> takePicture()
+                    1 -> pickImageFromGallery()
+                }
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun takePicture() {
+        imageUri = createImageUri()
+        imageUri?.let { takePictureLauncher.launch(it) }
+    }
+
+    private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             type = "image/*"
         }
         pickImageLauncher.launch(intent)
+    }
+
+    private fun createImageUri(): Uri? {
+        val contentResolver = requireContext().contentResolver
+        val fileName = "profile_picture_${System.currentTimeMillis()}.jpg"
+        val contentValues = android.content.ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+        }
+        return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
     }
 
     private fun uploadProfilePicture(imageUri: Uri) {
