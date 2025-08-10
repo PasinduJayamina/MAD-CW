@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -55,7 +54,7 @@ class BooksAdapter(
             Glide.with(holder.itemView.context)
                 .load(url)
                 // Optional: set a placeholder and error image
-                .placeholder(R.drawable.placeholder_book_cover)
+                .placeholder(R.drawable.`placeholder_book_cover.webp`)
                 .error(R.drawable.baseline_error_outline_24)
                 .into(holder.bookCoverImageView)
         } ?: run {

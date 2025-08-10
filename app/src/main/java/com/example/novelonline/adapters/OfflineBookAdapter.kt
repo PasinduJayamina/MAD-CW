@@ -36,8 +36,8 @@ class OfflineBookAdapter(
             // Load book cover image using Glide
             Glide.with(binding.root.context)
                 .load(book.coverImageUrl)
-                .placeholder(R.drawable.placeholder_book_cover)
-                .error(R.drawable.placeholder_book_cover)
+                .placeholder(R.drawable.`placeholder_book_cover.webp`)
+                .error(R.drawable.`placeholder_book_cover.webp`)
                 .into(binding.bookCoverImageView)
 
             // Set the click listener for the whole item

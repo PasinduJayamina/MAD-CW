@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -33,7 +32,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.util.Date
 import java.util.UUID
-import kotlin.collections.ArrayList
 
 class EditBookDetailsFragment : Fragment() {
 
@@ -139,11 +137,11 @@ class EditBookDetailsFragment : Fragment() {
                         if (!it.coverImageUrl.isNullOrEmpty()) {
                             Glide.with(this)
                                 .load(it.coverImageUrl)
-                                .placeholder(R.drawable.placeholder_book_cover)
-                                .error(R.drawable.placeholder_book_cover)
+                                .placeholder(R.drawable.`placeholder_book_cover.webp`)
+                                .error(R.drawable.`placeholder_book_cover.webp`)
                                 .into(binding.bookCoverImageView)
                         } else {
-                            binding.bookCoverImageView.setImageResource(R.drawable.placeholder_book_cover)
+                            binding.bookCoverImageView.setImageResource(R.drawable.`placeholder_book_cover.webp`)
                         }
                     }
                 } else {
