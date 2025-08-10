@@ -66,6 +66,9 @@
         <action
             android:id="@+id/action_readerDashboardFragment_to_bookFairsFragment"
             app:destination="@id/bookFairsFragment" />
+        <action
+            android:id="@+id/action_readerDashboardFragment_to_offlineBooksFragment"
+            app:destination="@id/OfflineBooksFragment" />
     </fragment>
 
     <fragment
@@ -95,6 +98,17 @@
         <action
             android:id="@+id/action_genreDetailFragment_to_novelDetailsFragment"
             app:destination="@id/NovelDetails" >
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/OfflineBooksFragment"
+        android:name="com.example.novelonline.fragments.OfflineBooksFragment"
+        android:label="fragment_offline reading"
+        tools:layout="@layout/fragment_offline_books" >
+        <action
+            android:id="@+id/action_OfflineBooksFragment_to_readChaptersFragment"
+            app:destination="@id/readChapterFragment">
         </action>
     </fragment>
 

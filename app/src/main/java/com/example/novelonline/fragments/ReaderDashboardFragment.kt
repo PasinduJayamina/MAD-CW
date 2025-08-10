@@ -71,6 +71,11 @@ class ReaderDashboardFragment : Fragment() {
         binding.editProfileIcon.setOnClickListener {
             openImagePicker()
         }
+
+        // Add the click listener for the new offline reading card
+        binding.offlineReadingCard.setOnClickListener {
+            findNavController().navigate(R.id.action_readerDashboardFragment_to_offlineBooksFragment)
+        }
     }
 
     private fun loadUserProfile() {

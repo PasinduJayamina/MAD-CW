@@ -22,7 +22,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
 import java.net.URL
+import java.io.IOException
 
 class NovelDetailsFragment : Fragment() {
 
@@ -31,8 +33,6 @@ class NovelDetailsFragment : Fragment() {
 
     private val args: NovelDetailsFragmentArgs by navArgs()
     private var currentBook: Book? = null
-
-    // Initialize the Room database
     private lateinit var database: AppDatabase
 
     override fun onCreateView(
@@ -46,7 +46,6 @@ class NovelDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize the database instance
         database = AppDatabase.getDatabase(requireContext())
 
         val novelId = args.novelId
@@ -54,7 +53,6 @@ class NovelDetailsFragment : Fragment() {
 
         setupNavigation(novelId)
 
-        // Set up the download button click listener
         binding.downloadButton.setOnClickListener {
             currentBook?.let { book ->
                 if (book.pdfUrl.isNotEmpty()) {
@@ -74,14 +72,13 @@ class NovelDetailsFragment : Fragment() {
         binding.readNowButton.setOnClickListener {
             currentBook?.let { book ->
                 viewLifecycleOwner.lifecycleScope.launch {
-                    // Check if the book is already downloaded
                     val offlineBook = database.offlineBookDao().getOfflineBook(book.id)
                     if (offlineBook != null) {
-                        // Open the local PDF file
+                        Log.d("NovelDetailsFragment", "Found offline book, launching local file: ${offlineBook.localFilePath}")
                         val action = NovelDetailsFragmentDirections.actionNovelDetailsToReadChaptersFragment(offlineBook.localFilePath)
                         findNavController().navigate(action)
                     } else {
-                        // Open the online PDF
+                        Log.d("NovelDetailsFragment", "Offline book not found, launching remote URL: ${book.pdfUrl}")
                         if (book.pdfUrl.isNotEmpty()) {
                             val action = NovelDetailsFragmentDirections.actionNovelDetailsToReadChaptersFragment(book.pdfUrl)
                             findNavController().navigate(action)
@@ -102,11 +99,8 @@ class NovelDetailsFragment : Fragment() {
     private fun fetchNovelDetails(id: String) {
         viewLifecycleOwner.lifecycleScope.launch {
             binding.detailsProgressBar.visibility = View.VISIBLE
-
             val book = BookRepository.getBookById(id)
-
             binding.detailsProgressBar.visibility = View.GONE
-
             if (book != null) {
                 currentBook = book
                 updateUi(book)
@@ -137,24 +131,34 @@ class NovelDetailsFragment : Fragment() {
                     val url = URL(book.pdfUrl)
                     val fileName = "${book.id}.pdf"
                     val file = File(requireContext().filesDir, fileName)
+                    Log.d("Download", "Attempting to download to path: ${file.absolutePath}")
+
                     url.openStream().use { input ->
-                        file.outputStream().use { output ->
+                        FileOutputStream(file).use { output ->
                             input.copyTo(output)
                         }
                     }
                     file
                 }
 
-                // Insert the downloaded book into the Room database
-                val offlineBook = book.toOfflineBook(localFile.absolutePath)
-                withContext(Dispatchers.IO) {
-                    database.offlineBookDao().insert(offlineBook)
+                // Verify the file exists and is not empty
+                if (localFile.exists() && localFile.length() > 0) {
+                    Log.d("Download", "File downloaded successfully. Size: ${localFile.length()} bytes")
+                    // Insert the downloaded book into the Room database
+                    val offlineBook = book.toOfflineBook(localFile.absolutePath)
+                    withContext(Dispatchers.IO) {
+                        database.offlineBookDao().insert(offlineBook)
+                    }
+                    Toast.makeText(context, "Download successful! Book saved for offline reading.", Toast.LENGTH_LONG).show()
+                } else {
+                    Log.e("Download", "Downloaded file is empty or does not exist.")
+                    Toast.makeText(context, "Download failed: The file is empty.", Toast.LENGTH_LONG).show()
                 }
-
-                Toast.makeText(context, "Download successful! Book saved for offline reading.", Toast.LENGTH_LONG).show()
-
+            } catch (e: IOException) {
+                Log.e("Download", "Download failed due to network or IO error: ${e.message}", e)
+                Toast.makeText(context, "Download failed due to network error.", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                Log.e("Download", "Download failed: ${e.message}", e)
+                Log.e("Download", "Download failed with an unexpected error: ${e.message}", e)
                 Toast.makeText(context, "Download failed: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }

@@ -15,4 +15,7 @@ interface OfflineBookDao {
 
     @Query("DELETE FROM offline_books WHERE bookId = :id")
     suspend fun delete(id: String)
+
+    @Query("SELECT * FROM offline_books")
+    suspend fun getAllOfflineBooks(): List<OfflineBook>
 }
