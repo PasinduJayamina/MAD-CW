@@ -54,7 +54,7 @@ class BooksAdapter(
             Glide.with(holder.itemView.context)
                 .load(url)
                 // Optional: set a placeholder and error image
-                .placeholder(R.drawable.`placeholder_book_cover.webp`)
+                .placeholder(R.drawable.`placeholder_book_cover`)
                 .error(R.drawable.baseline_error_outline_24)
                 .into(holder.bookCoverImageView)
         } ?: run {
